@@ -1,7 +1,69 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
 const AddService = () => {
+  const [serviceName, setservicename] = useState("");
+  const [about, setabout] = useState("");
+  const [amount, setamount] = useState("");
+  const [scheduledata, setscheduledate] = useState("");
+  const [start, setstart] = useState("");
+  const [end, setend] = useState("");
+  const [image, setimage] = useState("");
+  const [is_edit, setisedit] = useState(true);
+  const dispatch = useDispatch();
+
+  const inputArr = [
+    {
+      type: "date",
+      id: 1,
+      value: "",
+    },
+    {
+      type: "time",
+      id: 2,
+      value: "",
+    },
+    {
+      type: "time",
+      id: 3,
+      value: "",
+    },
+  ];
+
+  const [arr, setArr] = useState(inputArr);
+
+  const addInput = () => {
+    setArr((s) => {
+      const lastId = s[s.length - 1].id;
+      return [
+        ...s,
+        {
+          type: "date",
+          value: "",
+        },
+        {
+          type: "time",
+          value: "",
+        },
+        {
+          type: "time",
+          value: "",
+        },
+      ];
+    });
+  };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+
+    const index = e.target.id;
+    setArr((s) => {
+      const newArr = s.slice();
+      newArr[index].value = e.target.value;
+
+      return newArr;
+    });
+  };
   return (
     <div className="app-content content dashboard">
       <div className="content-wrapper">
@@ -79,15 +141,45 @@ const AddService = () => {
                       >
                         Availibility<span className="text-danger">*</span>
                       </label>
-                      <div className="d-lg-flex">
+                      {/* <div className="d-lg-flex">
                         <input className="inputDate my-3" type="date" />
                         <input className="inputDate my-3" type="date" />
                         <input className="inputDate my-3" type="date" />
-                      </div>
-                      <div className="text-end">
-                        <button className="notBtn primColor">
-                          <u>Add More Field</u>
+                      </div> */}
+                      {/* <div className="text-end">
+                        <button
+                          className="notBtn primColor"
+                          onClick={(e) => {
+                            e.preventDefault();
+                          }}
+                        >
+                          <i class="fa fa-plus" aria-hidden="true"></i>
                         </button>
+                      </div> */}
+                      <div>
+                        <button
+                          className="notBtn primColor"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            addInput();
+                          }}
+                        >
+                          <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                        {arr.map((item, i) => {
+                          return (
+                            <div className="d-lg-flex">
+                              <input
+                                className="inputDate my-3"
+                                onChange={handleChange}
+                                value={item.value}
+                                id={i}
+                                type={item.type}
+                                size="40"
+                              />
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                     <div className="inp-wrap sec-inp-wrap mb-3">

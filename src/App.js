@@ -50,7 +50,7 @@ export default function App() {
   }, []);
   return (
     <Provider store={store}>
-      <Router basename="/Child-Safety/admin">
+      <Router basename="/child-safety/admin">
         <Route path="/" component={Login} exact />
         <Route path="/forget-password" component={RecoverPassowrd1} exact />
         <Route path="/verification-code" component={RecoverPassword2} exact />

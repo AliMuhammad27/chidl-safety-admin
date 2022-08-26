@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { imageUrl } from "util/api";
+import { logOut } from "redux/action/auth";
 const SideBar = () => {
   const dispatch = useDispatch();
   const adminInfo = useSelector((state) => state.auth?.admin);
@@ -28,7 +29,7 @@ const SideBar = () => {
                   <img
                     className="brand-logo img-fluid"
                     alt="admin logo"
-                    src="../../images/logo.png"
+                    src="images/logo.png"
                   />{" "}
                 </a>{" "}
               </li>
@@ -192,16 +193,19 @@ const SideBar = () => {
                       <i className="far fa-user-circle" />
                       View Profile
                     </Link>
-                    <a
+                    <button
                       className="dropdown-item"
                       href="#"
                       type="button"
                       data-bs-toggle="modal"
                       data-bs-target="logoutModal"
+                      onClick={(e) => {
+                        dispatch(logOut());
+                      }}
                     >
                       <i className="fa fa-power-off" />
                       Logout
-                    </a>
+                    </button>
                   </div>
                 </li>
                 <li className="nav-item mobile-menu d-none d-md-block mr-auto">

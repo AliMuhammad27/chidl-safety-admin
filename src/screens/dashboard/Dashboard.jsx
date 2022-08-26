@@ -79,7 +79,7 @@ const Dashboard = () => {
                     <div className="individualChart me-md-4 mb-5">
                       <h6 className="mb-3">Category A</h6>
                       <img
-                        src="../../images/chart1.png"
+                        src="images/chart1.png"
                         alt="chart1"
                         className="img-fluid"
                       />
@@ -87,7 +87,7 @@ const Dashboard = () => {
                     <div className="individualChart me-md-4 mb-5">
                       <h6 className="mb-3">Category B</h6>
                       <img
-                        src="../../images/chart2.png"
+                        src="images/chart2.png"
                         alt="chart1"
                         className="img-fluid"
                       />
@@ -95,7 +95,7 @@ const Dashboard = () => {
                     <div className="individualChart mb-5">
                       <h6 className="mb-3">Category C</h6>
                       <img
-                        src="../../images/chart3.png"
+                        src="images/chart3.png"
                         alt="chart1"
                         className="img-fluid"
                       />
@@ -171,7 +171,7 @@ const Dashboard = () => {
                       >
                         <div className="individualChart my-4 mt-5">
                           <img
-                            src="../../images/chart4.png"
+                            src="images/chart4.png"
                             alt="chart1"
                             className="img-fluid"
                           />
@@ -236,11 +236,7 @@ const Dashboard = () => {
                         Users
                       </h3>
                     </div>
-                    <img
-                      src="../../images/map.png"
-                      className="img-fluid"
-                      alt="map"
-                    />
+                    <img src="images/map.png" className="img-fluid" alt="map" />
                   </div>
                   <div className="text-center pb-1">
                     <h3 className="prim-text fw-800 primFont mb-1">Months</h3>

@@ -9,9 +9,8 @@ import {
 import api from "../../util/api";
 import Success from "components/modals/Modal.Success";
 import { useHistory } from "react-router-dom";
-const history = useHistory();
 export const addProduct =
-  (formData, searchParam, status, from, to, sort, page, perPage) =>
+  (formData, searchParam, status, from, to, sort, page, perPage, history) =>
   async (dispatch) => {
     try {
       const res = await api.post("/product/addProduct", formData);

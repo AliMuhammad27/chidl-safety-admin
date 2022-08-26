@@ -21,7 +21,7 @@ const Login = ({ history }) => {
               <form action="dashboard">
                 <div className="text-center mb-5">
                   <img
-                    src="../../images/logo.png"
+                    src="images/logo.png"
                     alt="signIn"
                     className="logo img-fluid"
                   />
