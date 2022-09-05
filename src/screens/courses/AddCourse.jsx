@@ -5,7 +5,7 @@ import ImageSelector from "components/ImageSelector";
 import ImageSelectDropzone from "components/ImageSelectDropzone";
 import Toasty from "util/toast";
 import { addCourse } from "redux/action/course";
-const AddCourse = () => {
+const AddCourse = ({ history }) => {
   const dispatch = useDispatch();
   const [courseName, setcoursename] = useState("");
   const [aboutCourse, setaboutcourse] = useState("");
@@ -14,6 +14,21 @@ const AddCourse = () => {
   const [is_edit, setisedit] = useState(true);
   const [contentName, setcontentName] = useState("");
   const [contentDescription, setcontentdescription] = useState("");
+  const [productImage, setProductImage] = useState([]);
+  const [data, setData] = useState({
+    project_images: [],
+  });
+  const { project_images } = data;
+  const formData = new FormData();
+  formData.append("courseName", courseName);
+  formData.append("aboutCourse", aboutCourse);
+  formData.append("amount", amount);
+  formData.append("contentName", contentName);
+  formData.append("reciepts", image);
+  formData.append("contentDescription", contentDescription);
+  console.log("project images", project_images);
+  project_images.forEach((reciept) => formData.append("contentFiles", reciept));
+  console.log("FormData", formData);
   return (
     <div className="app-content content dashboard">
       <div className="content-wrapper">
@@ -66,6 +81,10 @@ const AddCourse = () => {
                       <input
                         id="course_name"
                         type="text"
+                        value={courseName}
+                        onChange={(e) => {
+                          setcoursename(e.target.value);
+                        }}
                         placeholder="Course Name here"
                         className="auth-input passInput"
                       />
@@ -80,6 +99,10 @@ const AddCourse = () => {
                       <input
                         id="num"
                         type="number"
+                        value={amount}
+                        onChange={(e) => {
+                          setamount(e.target.value);
+                        }}
                         placeholder="Enter Amount"
                         className="auth-input passInput ps-4"
                       />
@@ -94,6 +117,10 @@ const AddCourse = () => {
                       <textarea
                         id="text_area"
                         rows={5}
+                        value={aboutCourse}
+                        onChange={(e) => {
+                          setaboutcourse(e.target.value);
+                        }}
                         className="w-100 mx-0"
                         placeholder="Enter Description"
                         defaultValue={""}
@@ -110,12 +137,20 @@ const AddCourse = () => {
                         <input
                           id="desc1"
                           type="text"
+                          value={contentName}
+                          onChange={(e) => {
+                            setcontentName(e.target.value);
+                          }}
                           placeholder="Enter Component Name"
                           className="auth-input passInput w-25 w_100 mb-4"
                         />
                         <input
                           id="desc"
                           type="text"
+                          value={contentDescription}
+                          onChange={(e) => {
+                            setcontentdescription(e.target.value);
+                          }}
                           placeholder="Enter Decription"
                           className="auth-input passInput w-75 w_100 mb-4"
                         />
@@ -146,9 +181,24 @@ const AddCourse = () => {
                       </div>
                     </div> */}
                     <div className="upload_div mb-5">
-                      <ImageSelectDropzone />
+                      <ImageSelectDropzone
+                        max={5}
+                        setproductimage={setProductImage}
+                        files={data?.project_images}
+                        setFiles={(project_images) =>
+                          setData({ ...data, project_images })
+                        }
+                        accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.csv,.tsv,.ppt,.pptx,.pages,.odt,.rtf"
+                      />
                     </div>
-                    <button className="prim-btn cmsbtnPrim">Add</button>
+                    <button
+                      className="prim-btn cmsbtnPrim"
+                      onClick={(e) => {
+                        dispatch(addCourse(formData, history));
+                      }}
+                    >
+                      Add
+                    </button>
                   </div>
                 </div>
               </form>

@@ -1,7 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
-
+import Pagination from "components/Pagination";
+import { getAllCourses } from "redux/action/course";
+import moment from "moment";
 const Courses = () => {
+  const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [searchString, setSearchString] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [sort, setsort] = useState();
+  const [status, setStatus] = useState("");
+  useEffect(() => {
+    console.log("Fetching Courses");
+    dispatch(getAllCourses(searchString, status, from, to, page, perPage));
+  }, [searchString, status, from, to, sort, page, perPage]);
+  const courses = useSelector((state) => state.course?.courses?.course);
+  console.log("Fetched Courses", courses);
   return (
     <div>
       <div className="app-content content dashboard">
@@ -110,330 +127,68 @@ const Courses = () => {
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>$ 123</td>
-                                  <td>03/02/2020</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn cGreen">
-                                        Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#inactivateThis"
-                                        >
-                                          In-Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <Link
-                                          className="dropdown-item"
-                                          to="/course-details/:id"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </Link>
-                                        <Link
-                                          className="dropdown-item"
-                                          to="/edit-course/:id"
-                                        >
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </Link>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>$ 123</td>
-                                  <td>03/02/2020</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn cGreen">
-                                        Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#inactivateThis"
-                                        >
-                                          In-Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="./courseDetails.php"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a
-                                          className="dropdown-item"
-                                          href="./editCourse.php"
-                                        >
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>$ 123</td>
-                                  <td>03/02/2020</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn cGreen">
-                                        Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#inactivateThis"
-                                        >
-                                          In-Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="./courseDetails.php"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a
-                                          className="dropdown-item"
-                                          href="./editCourse.php"
-                                        >
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>$ 123</td>
-                                  <td>03/02/2020</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn text-danger">
-                                        In-Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#activateThis"
-                                        >
-                                          Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="./courseDetails.php"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a
-                                          className="dropdown-item"
-                                          href="./editCourse.php"
-                                        >
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>$ 123</td>
-                                  <td>03/02/2020</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn cGreen">
-                                        Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#inactivateThis"
-                                        >
-                                          In-Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="./courseDetails.php"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a
-                                          className="dropdown-item"
-                                          href="./editCourse.php"
-                                        >
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>$ 123</td>
-                                  <td>03/02/2020</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn cGreen">
-                                        Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#inactivateThis"
-                                        >
-                                          In-Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="./courseDetails.php"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a
-                                          className="dropdown-item"
-                                          href="./editCourse.php"
-                                        >
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
+                                {courses &&
+                                Object.keys(courses).length > 0 &&
+                                courses.docs.length > 0
+                                  ? courses.docs.map((item, index) => (
+                                      <tr className="tableRow">
+                                        <td>{index + 1}</td>
+                                        <td>{item?.courseName}</td>
+                                        <td>$ {item?.amount}</td>
+                                        <td>
+                                          {moment(item?.createdAt).format("ll")}
+                                        </td>
+                                        <td>
+                                          <div className="maindropdown">
+                                            <button className="maindropbtn cGreen">
+                                              Active
+                                              <i className="fas fa-caret-down ps-2" />
+                                            </button>
+                                            <div className="customDropdown-content">
+                                              <a
+                                                href="#"
+                                                type="button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#inactivateThis"
+                                              >
+                                                In-Active
+                                              </a>
+                                            </div>
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <div className="btn-group">
+                                            <button
+                                              type="button"
+                                              className="btn transparent-btn ellipsis-btn"
+                                              data-bs-toggle="dropdown"
+                                              aria-haspopup="true"
+                                              aria-expanded="false"
+                                            >
+                                              {" "}
+                                              <i className="fa fa-ellipsis-v" />
+                                            </button>
+                                            <div className="dropdown-menu text-left custom-dropdown">
+                                              <Link
+                                                className="dropdown-item"
+                                                to={`/course-details/${item?._id}`}
+                                              >
+                                                <i className="far fa-eye" />
+                                                View
+                                              </Link>
+                                              <Link
+                                                className="dropdown-item"
+                                                to="/edit-course/:id"
+                                              >
+                                                <i className="fas fa-edit" />
+                                                Edit
+                                              </Link>
+                                            </div>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    ))
+                                  : "No Courses"}
                               </tbody>
                             </table>
                           </div>
@@ -443,13 +198,23 @@ const Courses = () => {
                   </div>
                 </div>
                 <div className="row align-items-center  my-md-3 p-md-3 p-2 m-2 table-responsive">
-                  <div className="col-lg-5 col-sm-12 col-md-12">
+                  {courses?.docs?.length > 0 && (
+                    <Pagination
+                      totalDocs={courses?.totalDocs}
+                      totalPages={courses?.totalPages}
+                      currentPage={courses?.page}
+                      setPage={setPage}
+                      hasNextPage={courses?.hasNextPage}
+                      hasPrevPage={courses?.hasPrevPage}
+                    />
+                  )}
+                  {/* <div className="col-lg-5 col-sm-12 col-md-12">
                     <h6 className="pagination-details">
                       {" "}
                       Showing 05 out of 40 records{" "}
                     </h6>
-                  </div>
-                  <div className="col-lg-7 col-sm-12 col-md-12">
+                  </div> */}
+                  {/* <div className="col-lg-7 col-sm-12 col-md-12">
                     <div
                       className="dataTables_paginate paging_simple_numbers"
                       id="DataTables_Table_0_paginate"
@@ -489,7 +254,7 @@ const Courses = () => {
                         </div>
                       </ul>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 {/* User Management Ends */}
               </div>

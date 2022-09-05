@@ -1,4 +1,11 @@
-import { ADD_COURSE, ADD_COURSE_ERROR } from "redux/action/actionTypes";
+import {
+  ADD_COURSE,
+  ADD_COURSE_ERROR,
+  GET_COURSES,
+  GET_COURSES_ERROR,
+  GET_COURSE_DETAILS,
+  GET_COURSE_DETAILS_ERROR,
+} from "redux/action/actionTypes";
 const initialState = {
   courses: [],
   course: null,
@@ -16,7 +23,21 @@ const courseReducer = (state = initialState, action) => {
         courseAdded: payload,
         isLoading: false,
       };
+    case GET_COURSES:
+      return {
+        ...state,
+        courses: payload,
+        isLoading: false,
+      };
+    case GET_COURSE_DETAILS:
+      return {
+        ...state,
+        course: payload,
+        isLoading: false,
+      };
     case ADD_COURSE_ERROR:
+    case GET_COURSES_ERROR:
+    case GET_COURSE_DETAILS_ERROR:
       return {
         ...state,
         courses: null,

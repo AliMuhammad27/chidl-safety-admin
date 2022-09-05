@@ -5,6 +5,9 @@ import course from "./course";
 import category from "./category";
 import attribute from "./attribute";
 import product from "./product";
+import service from "./service";
+import subscription from "./subscription";
+import quiz from "./quiz";
 export default combineReducers({
   auth,
   profile,
@@ -12,4 +15,7 @@ export default combineReducers({
   category,
   attribute,
   product,
+  service,
+  subscription,
+  quiz,
 });

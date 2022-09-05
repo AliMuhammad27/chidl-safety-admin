@@ -10,7 +10,7 @@ import api from "../../util/api";
 import Success from "components/modals/Modal.Success";
 import { useHistory } from "react-router-dom";
 export const addProduct =
-  (formData, searchParam, status, from, to, sort, page, perPage, history) =>
+  (formData, searchParam, status, from, to, page, perPage) =>
   async (dispatch) => {
     try {
       const res = await api.post("/product/addProduct", formData);
@@ -21,7 +21,6 @@ export const addProduct =
         payload: res.data,
       });
       Success("Product Added Successfully", "Added");
-      history.push("/products");
       dispatch(getAllProducts(searchParam, status, from, to, page, perPage));
     } catch (err) {
       console.log("Err", err);

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const EditService = () => {
   return (
@@ -8,7 +9,9 @@ const EditService = () => {
           {/* Basic form layout section start */}
           <section id="configuration">
             <div className="d-flex align-items-center my-3">
-              <i className="fas fa-arrow-left me-3 go-back-icon" />
+              <Link to="/services">
+                <i className="fas fa-arrow-left me-3 go-back-icon" />
+              </Link>
               <h1 className="page-title fw-800 primFont mb-0">Edit Service</h1>
             </div>
             <div className="box">

@@ -10,8 +10,13 @@ const Login = ({ history }) => {
   const dispatch = useDispatch();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [passwordShown, setPasswordShown] = useState(false);
   console.log("Email", email);
   useWindowTitle("login");
+  const togglePassword = () => {
+    setPasswordShown(!passwordShown);
+  };
+
   return (
     <section className="authPage">
       <div className="container">
@@ -56,8 +61,8 @@ const Login = ({ history }) => {
                   <div className="position-relative passwordWrapper">
                     <input
                       id="pass"
-                      type="password"
                       placeholder="Enter Password"
+                      type={passwordShown ? "text" : "password"}
                       className="auth-input passInput"
                       value={password}
                       onChange={(e) => {
@@ -67,8 +72,14 @@ const Login = ({ history }) => {
                     <button
                       className="not_btn passDisplay authIcon2 p-0"
                       type="button"
+                      onClick={togglePassword}
                     >
-                      <i className="fas fa-eye-slash" aria-hidden="true" />
+                      <i
+                        className={
+                          passwordShown ? "fas fa-eye" : "fas fa-eye-slash"
+                        }
+                        aria-hidden="true"
+                      />
                     </button>
                   </div>
                 </div>

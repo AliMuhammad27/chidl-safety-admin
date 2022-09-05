@@ -14,8 +14,12 @@ import {
 import api from "../../util/api";
 import Success from "components/modals/Modal.Success";
 export const addCategory =
-  (categoryName, status, history) => async (dispatch) => {
-    const body = { categoryName, status };
+  (categoryName, statuss, searchString, status, from, to, page, perPage) =>
+  async (dispatch) => {
+    const body = {
+      categoryName,
+      statuss,
+    };
     try {
       const res = await api.post(`/category/createCategory`, body);
       console.log("Res", res.data);
@@ -24,7 +28,7 @@ export const addCategory =
         payload: res.data,
       });
       Success("Category Added Succesfully", "Added");
-      //history.push("/courses");
+      dispatch(getAllCategories(searchString, status, from, to, page, perPage));
     } catch (err) {
       console.log("Err", err);
       dispatch({
@@ -33,10 +37,10 @@ export const addCategory =
     }
   };
 export const getAllCategories =
-  (searchParam, status, from, to, sort, page, perPage) => async (dispatch) => {
+  (searchString, status, from, to, page, perPage) => async (dispatch) => {
     try {
       const res = await api.get(
-        `/category/logs?searchString=${searchParam}&status=${status}&from=${from}&to=${to}&sort=${sort}&page=${page}&perPage=${perPage}`
+        `/category/logs?searchString=${searchString}&status=${status}&from=${from}&to=${to}&page=${page}&perPage=${perPage}`
       );
       console.log("Res", res.data);
       dispatch({
@@ -93,25 +97,3 @@ export const editCategory = (id, formData, history) => async (dispatch) => {
     });
   }
 };
-
-export const deleteTax =
-  (id, searchParam, status, from, to, sort, page, perPage) =>
-  async (dispatch) => {
-    try {
-      const res = api.delete(`category/deleteCategory/${id}`);
-      console.log("ID", id);
-      dispatch({
-        type: DELETE_CATEGORY,
-        payload: { TaxID: id },
-      });
-      Success("Task Deleted Successfully");
-      dispatch(
-        getAllCategories(searchParam, status, from, to, sort, page, perPage)
-      );
-    } catch (err) {
-      console.log("ERR", err);
-      dispatch({
-        type: DELETE_CATEGORY_ERROR,
-      });
-    }
-  };

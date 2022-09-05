@@ -105,6 +105,17 @@ export default function App() {
           component={AttributeManagement}
           exact
         />
+        <PrivateRoute path="/payments-logs" component={PaymentLogs} exact />
+
+        <PrivateRoute
+          path="/order-management"
+          component={OrderManagement}
+          exact
+        />
+
+        <PrivateRoute path="/quiz" component={Quiz} exact />
+        <PrivateRoute path="/edit-quiz/:id" component={EditQuiz} exact />
+        <PrivateRoute path="/feedbacks" component={Feedbacks} exact />
       </Router>
     </Provider>
   );

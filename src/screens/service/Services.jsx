@@ -1,7 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getAllServices } from "redux/action/service";
+import moment from "moment";
+import Pagination from "components/Pagination";
 const Services = () => {
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [searchString, setSearchString] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [sort, setsort] = useState();
+  const [status, setStatus] = useState("");
+  const dispatch = useDispatch();
+  useEffect(() => {
+    console.log("Fetching Products");
+    dispatch(getAllServices(searchString, status, from, to, page, perPage));
+  }, [searchString, status, from, to, sort, page, perPage]);
+  const services = useSelector((state) => state.service?.services?.service);
+  console.log("Fetched Services", services);
   return (
     <div>
       <div className="app-content content dashboard">
@@ -46,6 +63,10 @@ const Services = () => {
                       <form action="#">
                         <input
                           type="search"
+                          value={searchString}
+                          onChange={(e) => {
+                            setSearchString(e.target.value);
+                          }}
                           id="search-inp"
                           className="dashInput search-input w-100"
                           placeholder="Search...."
@@ -63,6 +84,10 @@ const Services = () => {
                       <label className="mr-xl-2 mr-2">From:</label>
                       <input
                         type="date"
+                        value={from}
+                        onChange={(e) => {
+                          setFrom(e.target.value);
+                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -73,6 +98,10 @@ const Services = () => {
                       <label className="mr-xl-2 mr-2">To:</label>
                       <input
                         type="date"
+                        value={to}
+                        onChange={(e) => {
+                          setTo(e.target.value);
+                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -83,10 +112,15 @@ const Services = () => {
                       <label className="mr-xl-2 mr-2 mb-3">
                         Service Status
                       </label>
-                      <select className="dashInput sm-dropdown mb-3">
+                      <select
+                        className="dashInput sm-dropdown mb-3"
+                        onChange={(e) => {
+                          setStatus(e.target.value);
+                        }}
+                      >
                         <option value="Status">Status</option>
-                        <option value="Active">Active</option>
-                        <option value="InActive">InActive</option>
+                        <option value="true">Active</option>
+                        <option value="false">InActive</option>
                       </select>
                     </div>
                   </div>
@@ -110,60 +144,86 @@ const Services = () => {
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>$ 123</td>
-                                  <td>03/02/2020</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn cGreen">
-                                        Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#inactivateThis"
-                                        >
-                                          In-Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="./serviceDetails.php"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a
-                                          className="dropdown-item"
-                                          href="./editService.php"
-                                        >
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
+                                {services &&
+                                Object.keys(services).length > 0 &&
+                                services.docs.length > 0
+                                  ? services.docs.map((item, index) => (
+                                      <tr className="tableRow">
+                                        <td>{index + 1}</td>
+                                        <td>{item?.serviceName}</td>
+                                        <td>${item?.amount}</td>
+                                        <td>
+                                          {moment(item?.createdAt).format("ll")}
+                                        </td>
+                                        <td>
+                                          <div className="maindropdown">
+                                            <button
+                                              className={
+                                                item?.status
+                                                  ? "maindropbtn cGreen"
+                                                  : "maindropbtn text-danger"
+                                              }
+                                            >
+                                              {item?.status ? (
+                                                <>Active</>
+                                              ) : (
+                                                <>In-Active</>
+                                              )}
+                                              <i className="fas fa-caret-down ps-2" />
+                                            </button>
+                                            <div className="customDropdown-content">
+                                              <a
+                                                href="#"
+                                                type="button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target={
+                                                  item?.status
+                                                    ? "#inactivateThis"
+                                                    : "#activateThis"
+                                                }
+                                              >
+                                                {item?.status ? (
+                                                  <>In-Active</>
+                                                ) : (
+                                                  <>Active</>
+                                                )}{" "}
+                                              </a>
+                                            </div>
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <div className="btn-group">
+                                            <button
+                                              type="button"
+                                              className="btn transparent-btn ellipsis-btn"
+                                              data-bs-toggle="dropdown"
+                                              aria-haspopup="true"
+                                              aria-expanded="false"
+                                            >
+                                              {" "}
+                                              <i className="fa fa-ellipsis-v" />
+                                            </button>
+                                            <div className="dropdown-menu text-left custom-dropdown">
+                                              <Link
+                                                className="dropdown-item"
+                                                to={`/service-details/${item?.id}`}
+                                              >
+                                                <i className="far fa-eye" />
+                                                View
+                                              </Link>
+                                              <Link
+                                                className="dropdown-item"
+                                                to="/edit-service/:id"
+                                              >
+                                                <i className="fas fa-edit" />
+                                                Edit
+                                              </Link>
+                                            </div>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    ))
+                                  : "No Products"}
                               </tbody>
                             </table>
                           </div>
@@ -172,7 +232,17 @@ const Services = () => {
                     </div>
                   </div>
                 </div>
-                <div className="row align-items-center  my-md-3 p-md-3 p-2 m-2 table-responsive">
+                {services?.docs?.length > 0 && (
+                  <Pagination
+                    totalDocs={services?.totalDocs}
+                    totalPages={services?.totalPages}
+                    currentPage={services?.page}
+                    setPage={setPage}
+                    hasNextPage={services?.hasNextPage}
+                    hasPrevPage={services?.hasPrevPage}
+                  />
+                )}
+                {/* <div className="row align-items-center  my-md-3 p-md-3 p-2 m-2 table-responsive">
                   <div className="col-lg-5 col-sm-12 col-md-12">
                     <h6 className="pagination-details">
                       {" "}
@@ -220,7 +290,7 @@ const Services = () => {
                       </ul>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 {/* User Management Ends */}
               </div>
             </section>

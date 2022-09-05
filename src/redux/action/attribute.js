@@ -9,9 +9,21 @@ import api from "../../util/api";
 import Success from "components/modals/Modal.Success";
 
 export const addAttribute =
-  (attributeName, attributeValue, attributeType, status, history) =>
+  (
+    attributeName,
+    attributeValue,
+    attributeType,
+    statuss,
+    searchString,
+    status,
+    from,
+    to,
+    sort,
+    page,
+    perPage
+  ) =>
   async (dispatch) => {
-    const body = { attributeName, attributeValue, attributeType, status };
+    const body = { attributeName, attributeValue, attributeType, statuss };
     try {
       const res = await api.post(`/attribute/createAttribute`, body);
       console.log("Res", res.data);
@@ -20,7 +32,9 @@ export const addAttribute =
         payload: res.data,
       });
       Success("Attribute Added Succesfully", "Added");
-      //history.push("/courses");
+      dispatch(
+        getAllAttributes(searchString, status, from, to, sort, page, perPage)
+      );
     } catch (err) {
       console.log("Err", err);
       dispatch({

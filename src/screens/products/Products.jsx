@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getAllProducts } from "redux/action/product";
 import { useSelector, useDispatch } from "react-redux";
+import Pagination from "components/Pagination";
 const Products = () => {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
@@ -52,6 +53,10 @@ const Products = () => {
                       <form action="#">
                         <input
                           type="search"
+                          value={searchString}
+                          onChange={(e) => {
+                            setSearchString(e.target.value);
+                          }}
                           id="search-inp"
                           className="dashInput search-input w-100"
                           placeholder="Search...."
@@ -70,6 +75,10 @@ const Products = () => {
                       <input
                         type="date"
                         placeholder="From"
+                        value={from}
+                        onChange={(e) => {
+                          setFrom(e.target.value);
+                        }}
                         className="primDateTime"
                       />
                     </div>
@@ -79,6 +88,10 @@ const Products = () => {
                       <label className="mr-xl-2 mr-2">To:</label>
                       <input
                         type="date"
+                        value={to}
+                        onChange={(e) => {
+                          setTo(e.target.value);
+                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -89,10 +102,15 @@ const Products = () => {
                       <label className="mr-xl-2 mr-2 mb-3">
                         Service Status
                       </label>
-                      <select className="dashInput sm-dropdown mb-3">
+                      <select
+                        className="dashInput sm-dropdown mb-3"
+                        onChange={(e) => {
+                          setStatus(e.target.value);
+                        }}
+                      >
                         <option value="Status">Status</option>
-                        <option value="Active">Active</option>
-                        <option value="InActive">InActive</option>
+                        <option value="true">Active</option>
+                        <option value="false">InActive</option>
                       </select>
                     </div>
                   </div>
@@ -186,7 +204,17 @@ const Products = () => {
                     </div>
                   </div>
                 </div>
-                <div className="row align-items-center  my-md-3 p-md-3 p-2 m-2 table-responsive">
+                {products?.docs?.length > 0 && (
+                  <Pagination
+                    totalDocs={products?.totalDocs}
+                    totalPages={products?.totalPages}
+                    currentPage={products?.page}
+                    setPage={setPage}
+                    hasNextPage={products?.hasNextPage}
+                    hasPrevPage={products?.hasPrevPage}
+                  />
+                )}
+                {/* <div className="row align-items-center  my-md-3 p-md-3 p-2 m-2 table-responsive">
                   <div className="col-lg-5 col-sm-12 col-md-12">
                     <h6 className="pagination-details">
                       {" "}
@@ -234,7 +262,7 @@ const Products = () => {
                       </ul>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 {/* User Management Ends */}
               </div>
             </section>

@@ -1,6 +1,53 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import moment from "moment";
+import {
+  getAllSubscriptions,
+  addSubscription,
+} from "redux/action/subscription";
+import Toasty from "util/toast";
+import Pagination from "components/Pagination";
 
 const SubscriptionManagement = () => {
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [searchString, setSearchString] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [status, setsstatus] = useState(true);
+  const [form, setValues] = useState({
+    subscriptionname: "",
+    subscriptionprice: "",
+    numberOfCourses: "",
+    numberOfServices: "",
+    subscriptionduration: "",
+  });
+  const {
+    subscriptionname,
+    subscriptionprice,
+    numberOfCourses,
+    numberOfServices,
+    subscriptionduration,
+  } = form;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      getAllSubscriptions(searchString, status, from, to, page, perPage)
+    );
+  }, [searchString, status, from, to, page, perPage]);
+  const subscriptions = useSelector(
+    (state) => state.subscription?.subscriptions?.subscription
+  );
+  console.log("Subscriptions", subscriptions);
+
+  const handleStateChange = (e) => {
+    e.preventDefault();
+    setValues({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
     <div>
       <div className="app-content content dashboard">
@@ -51,6 +98,10 @@ const SubscriptionManagement = () => {
                         <input
                           type="search"
                           id="search-inp"
+                          value={searchString}
+                          onChange={(e) => {
+                            setSearchString(e.target.value);
+                          }}
                           className="dashInput search-input w-100"
                           placeholder="Search...."
                         />
@@ -67,6 +118,10 @@ const SubscriptionManagement = () => {
                       <label className="mr-xl-2 mr-2">From:</label>
                       <input
                         type="date"
+                        value={from}
+                        onChange={(e) => {
+                          setFrom(e.target.value);
+                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -78,6 +133,10 @@ const SubscriptionManagement = () => {
                       <input
                         type="date"
                         placeholder="From"
+                        value={to}
+                        onChange={(e) => {
+                          setTo(e.target.value);
+                        }}
                         className="primDateTime"
                       />
                     </div>
@@ -87,10 +146,15 @@ const SubscriptionManagement = () => {
                       <label className="mr-xl-2 mr-2 mb-3">
                         Service Status
                       </label>
-                      <select className="dashInput sm-dropdown mb-3">
+                      <select
+                        className="dashInput sm-dropdown mb-3"
+                        onChange={(e) => {
+                          setsstatus(e.target.value);
+                        }}
+                      >
                         <option value="Status">Status</option>
-                        <option value="Active">Active</option>
-                        <option value="InActive">InActive</option>
+                        <option value="true">Active</option>
+                        <option value="false">InActive</option>
                       </select>
                     </div>
                   </div>
@@ -114,354 +178,78 @@ const SubscriptionManagement = () => {
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>03/02/2020</td>
-                                  <td>$ 123</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn cGreen">
-                                        Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#inactivateThis"
-                                        >
-                                          In-Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="#"
-                                          data-bs-target="#subscriptionPackageDetails"
-                                          data-bs-toggle="modal"
-                                          type="button"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-trash" />
-                                          Delete
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>03/02/2020</td>
-                                  <td>$ 123</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn cGreen">
-                                        Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#inactivateThis"
-                                        >
-                                          In-Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="#"
-                                          data-bs-target="#subscriptionPackageDetails"
-                                          data-bs-toggle="modal"
-                                          type="button"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-trash" />
-                                          Delete
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>03/02/2020</td>
-                                  <td>$ 123</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn cGreen">
-                                        Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#inactivateThis"
-                                        >
-                                          In-Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="#"
-                                          data-bs-target="#subscriptionPackageDetails"
-                                          data-bs-toggle="modal"
-                                          type="button"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-trash" />
-                                          Delete
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>03/02/2020</td>
-                                  <td>$ 123</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn text-danger">
-                                        In-Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#activateThis"
-                                        >
-                                          Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="#"
-                                          data-bs-target="#subscriptionPackageDetails"
-                                          data-bs-toggle="modal"
-                                          type="button"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-trash" />
-                                          Delete
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>03/02/2020</td>
-                                  <td>$ 123</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn cGreen">
-                                        Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#inactivateThis"
-                                        >
-                                          In-Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="#"
-                                          data-bs-target="#subscriptionPackageDetails"
-                                          data-bs-toggle="modal"
-                                          type="button"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-trash" />
-                                          Delete
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr className="tableRow">
-                                  <td>01</td>
-                                  <td>ADCF</td>
-                                  <td>03/02/2020</td>
-                                  <td>$ 123</td>
-                                  <td>
-                                    <div className="maindropdown">
-                                      <button className="maindropbtn cGreen">
-                                        Active
-                                        <i className="fas fa-caret-down ps-2" />
-                                      </button>
-                                      <div className="customDropdown-content">
-                                        <a
-                                          href="#"
-                                          type="button"
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#inactivateThis"
-                                        >
-                                          In-Active
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="btn-group">
-                                      <button
-                                        type="button"
-                                        className="btn transparent-btn ellipsis-btn"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                      >
-                                        {" "}
-                                        <i className="fa fa-ellipsis-v" />
-                                      </button>
-                                      <div className="dropdown-menu text-left custom-dropdown">
-                                        <a
-                                          className="dropdown-item"
-                                          href="#"
-                                          data-bs-target="#subscriptionPackageDetails"
-                                          data-bs-toggle="modal"
-                                          type="button"
-                                        >
-                                          <i className="far fa-eye" />
-                                          View
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-edit" />
-                                          Edit
-                                        </a>
-                                        <a className="dropdown-item" href="#">
-                                          <i className="fas fa-trash" />
-                                          Delete
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
+                                {subscriptions &&
+                                Object.keys(subscriptions).length > 0 &&
+                                subscriptions.docs.length > 0
+                                  ? subscriptions.docs.map((item, index) => (
+                                      <tr className="tableRow">
+                                        <td>{index + 1}</td>
+                                        <td>{item?.subscriptionname}</td>
+                                        <td>
+                                          {moment(item?.createdAt).format("ll")}
+                                        </td>
+                                        <td>$ {item?.subscriptionprice}</td>
+                                        <td>
+                                          <div className="maindropdown">
+                                            <button className="maindropbtn cGreen">
+                                              Active
+                                              <i className="fas fa-caret-down ps-2" />
+                                            </button>
+                                            <div className="customDropdown-content">
+                                              <a
+                                                href="#"
+                                                type="button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#inactivateThis"
+                                              >
+                                                In-Active
+                                              </a>
+                                            </div>
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <div className="btn-group">
+                                            <button
+                                              type="button"
+                                              className="btn transparent-btn ellipsis-btn"
+                                              data-bs-toggle="dropdown"
+                                              aria-haspopup="true"
+                                              aria-expanded="false"
+                                            >
+                                              {" "}
+                                              <i className="fa fa-ellipsis-v" />
+                                            </button>
+                                            <div className="dropdown-menu text-left custom-dropdown">
+                                              <a
+                                                className="dropdown-item"
+                                                href="#"
+                                                data-bs-target="#subscriptionPackageDetails"
+                                                data-bs-toggle="modal"
+                                                type="button"
+                                              >
+                                                <i className="far fa-eye" />
+                                                View
+                                              </a>
+                                              <a
+                                                className="dropdown-item"
+                                                href="#"
+                                              >
+                                                <i className="fas fa-edit" />
+                                                Edit
+                                              </a>
+                                              <a
+                                                className="dropdown-item"
+                                                href="#"
+                                              >
+                                                <i className="fas fa-trash" />
+                                                Delete
+                                              </a>
+                                            </div>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    ))
+                                  : "No Subs"}
                               </tbody>
                             </table>
                           </div>
@@ -471,7 +259,17 @@ const SubscriptionManagement = () => {
                   </div>
                 </div>
                 <div className="row align-items-center  my-md-3 p-md-3 p-2 m-2 table-responsive">
-                  <div className="col-lg-5 col-sm-12 col-md-12">
+                  {subscriptions?.docs?.length > 0 && (
+                    <Pagination
+                      totalDocs={subscriptions?.totalDocs}
+                      totalPages={subscriptions?.totalPages}
+                      currentPage={subscriptions?.page}
+                      setPage={setPage}
+                      hasNextPage={subscriptions?.hasNextPage}
+                      hasPrevPage={subscriptions?.hasPrevPage}
+                    />
+                  )}
+                  {/* <div className="col-lg-5 col-sm-12 col-md-12">
                     <h6 className="pagination-details">
                       {" "}
                       Showing 05 out of 40 records{" "}
@@ -517,7 +315,7 @@ const SubscriptionManagement = () => {
                         </div>
                       </ul>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 {/* User Management Ends */}
               </div>
@@ -753,6 +551,7 @@ const SubscriptionManagement = () => {
                       </label>
                       <p>12</p>
                     </div>
+
                     <div className="primContentWrap mb-2 d-md-flex text-start">
                       <label htmlFor className="mb-1">
                         Duration
@@ -819,11 +618,16 @@ const SubscriptionManagement = () => {
                     htmlFor="ser_name"
                     className="d-block primLable my-2 px-md-3 px-1"
                   >
-                    Service Name <span className="text-danger">*</span>
+                    Subscription Name <span className="text-danger">*</span>
                   </label>
                   <input
                     id="ser_name"
                     type="text"
+                    name="subscriptionname"
+                    value={subscriptionname}
+                    onChange={(e) => {
+                      handleStateChange(e);
+                    }}
                     placeholder="Service Name"
                     className="auth-input passInput mx-0"
                   />
@@ -838,6 +642,31 @@ const SubscriptionManagement = () => {
                   <input
                     id="courses"
                     type="number"
+                    name="numberOfCourses"
+                    value={numberOfCourses}
+                    onChange={(e) => {
+                      handleStateChange(e);
+                    }}
+                    placeholder={12}
+                    className="auth-input passInput mx-0"
+                  />
+                </div>
+
+                <div className="inp-wrap sec-inp-wrap mb-3">
+                  <label
+                    htmlFor="courses"
+                    className="d-block primLable my-2 px-md-3 px-1"
+                  >
+                    No of Services<span className="text-danger">*</span>
+                  </label>
+                  <input
+                    id="courses"
+                    type="number"
+                    name="numberOfServices"
+                    value={numberOfServices}
+                    onChange={(e) => {
+                      handleStateChange(e);
+                    }}
                     placeholder={12}
                     className="auth-input passInput mx-0"
                   />
@@ -852,6 +681,11 @@ const SubscriptionManagement = () => {
                   <input
                     id="courses"
                     type="number"
+                    name="subscriptionduration"
+                    value={subscriptionduration}
+                    onChange={(e) => {
+                      handleStateChange(e);
+                    }}
                     placeholder={30}
                     className="auth-input passInput mx-0"
                   />
@@ -868,6 +702,11 @@ const SubscriptionManagement = () => {
                     <input
                       id="num"
                       type="number"
+                      name="subscriptionprice"
+                      value={subscriptionprice}
+                      onChange={(e) => {
+                        handleStateChange(e);
+                      }}
                       placeholder="Enter Amount"
                       className="auth-input passInput mx-0"
                     />
@@ -887,6 +726,26 @@ const SubscriptionManagement = () => {
                 </div>
                 <div className="modal-footer">
                   <button
+                    onClick={(e) => {
+                      subscriptionname.length > 0 &&
+                      subscriptionprice.length > 0 &&
+                      numberOfCourses.length > 0
+                        ? dispatch(
+                            addSubscription(
+                              form,
+                              searchString,
+                              status,
+                              from,
+                              to,
+                              page,
+                              perPage
+                            )
+                          )
+                        : Toasty(
+                            "Error",
+                            "Please fill all the required fields"
+                          );
+                    }}
                     type="button"
                     className="prim-btn cmsbtnPrim my-1"
                     data-bs-dismiss="modal"

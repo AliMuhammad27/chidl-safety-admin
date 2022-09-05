@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addAttribute, getAllAttributes } from "redux/action/attribute";
+import Pagination from "components/Pagination";
 import Toasty from "util/toast";
 const AttributeManagement = ({ history }) => {
   const dispatch = useDispatch();
@@ -13,12 +14,11 @@ const AttributeManagement = ({ history }) => {
   const [searchString, setSearchString] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [sort, setsort] = useState();
   const [status, setStatus] = useState("");
   useEffect(() => {
     console.log("Fetching Attributes");
     dispatch(getAllAttributes(searchString, status, from, to, page, perPage));
-  }, [searchString, status, from, to, sort, page, perPage]);
+  }, [searchString, status, from, to, page, perPage]);
   const attributes = useSelector(
     (state) => state.attribute?.attributes?.attribute
   );
@@ -64,6 +64,10 @@ const AttributeManagement = ({ history }) => {
                       <form action="#">
                         <input
                           type="search"
+                          value={searchString}
+                          onChange={(e) => {
+                            setSearchString(e.target.value);
+                          }}
                           id="search-inp"
                           className="dashInput search-input w-100"
                           placeholder="Search...."
@@ -81,6 +85,10 @@ const AttributeManagement = ({ history }) => {
                       <label className="mr-xl-2 mr-2">From:</label>
                       <input
                         type="date"
+                        value={from}
+                        onChange={(e) => {
+                          setFrom(e.target.value);
+                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -91,6 +99,10 @@ const AttributeManagement = ({ history }) => {
                       <label className="mr-xl-2 mr-2">To:</label>
                       <input
                         type="date"
+                        value={to}
+                        onChange={(e) => {
+                          setTo(e.target.value);
+                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -101,10 +113,15 @@ const AttributeManagement = ({ history }) => {
                       <label className="mr-xl-2 mr-2 mb-3">
                         Service Status
                       </label>
-                      <select className="dashInput sm-dropdown mb-3">
+                      <select
+                        className="dashInput sm-dropdown mb-3"
+                        onChange={(e) => {
+                          setStatus(e.target.value);
+                        }}
+                      >
                         <option value="Status">Status</option>
-                        <option value="Active">Active</option>
-                        <option value="InActive">InActive</option>
+                        <option value="true">Active</option>
+                        <option value="false">InActive</option>
                       </select>
                     </div>
                   </div>
@@ -199,7 +216,17 @@ const AttributeManagement = ({ history }) => {
                     </div>
                   </div>
                 </div>
-                <div className="row align-items-center  my-md-3 p-md-3 p-2 m-2 table-responsive">
+                {attributes?.docs?.length > 0 && (
+                  <Pagination
+                    totalDocs={attributes?.totalDocs}
+                    totalPages={attributes?.totalPages}
+                    currentPage={attributes?.page}
+                    setPage={setPage}
+                    hasNextPage={attributes?.hasNextPage}
+                    hasPrevPage={attributes?.hasPrevPage}
+                  />
+                )}
+                {/* <div className="row align-items-center  my-md-3 p-md-3 p-2 m-2 table-responsive">
                   <div className="col-lg-5 col-sm-12 col-md-12">
                     <h6 className="pagination-details">
                       {" "}
@@ -247,7 +274,7 @@ const AttributeManagement = ({ history }) => {
                       </ul>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 {/* User Management Ends */}
               </div>
             </section>
@@ -445,7 +472,12 @@ const AttributeManagement = ({ history }) => {
                               attributeValue,
                               attributeType,
                               statuss,
-                              history
+                              searchString,
+                              status,
+                              from,
+                              to,
+                              page,
+                              perPage
                             )
                           )
                         : Toasty(

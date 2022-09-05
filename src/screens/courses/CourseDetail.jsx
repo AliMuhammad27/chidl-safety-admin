@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-
-const CourseDetail = () => {
+import { getCourseDetails } from "redux/action/course";
+import { useDispatch, useSelector } from "react-redux";
+import { imageUrl, baseURL } from "util/api";
+const CourseDetail = ({ match }) => {
+  const courseInfo = useSelector((state) => state?.course?.course?.course);
+  console.log("courseInfo", courseInfo);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    console.log("Getting Service Details");
+    dispatch(getCourseDetails(match.params.id));
+  }, [match.params.id]);
   return (
     <div className="app-content content dashboard">
       <div className="content-wrapper">
@@ -24,7 +33,7 @@ const CourseDetail = () => {
                     <div className="col-xxl-4 col-lg-6">
                       <div className="serviceimgWrap mb-3">
                         <img
-                          src="../../images/services.png"
+                          src={`${imageUrl}${courseInfo?.courseImage}`}
                           className="img-fluid"
                           alt="image"
                         />
@@ -45,27 +54,19 @@ const CourseDetail = () => {
                     <label htmlFor className="mb-1">
                       Course Name
                     </label>
-                    <p>Course A</p>
+                    <p>{courseInfo?.courseName}</p>
                   </div>
                   <div className="primContentWrap mb-2 d-xl-flex">
                     <label htmlFor className="mb-1">
                       About Course
                     </label>
-                    <p>$ 1234</p>
+                    <p>{courseInfo?.aboutCourse}</p>
                   </div>
                   <div className="primContentWrap mb-2 d-xl-flex">
                     <label htmlFor className="mb-1">
                       Amount
                     </label>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Aenean euismod bibendum laoreet. Proin gravida dolor sit
-                      amet lacus accumsan et viverra justo commodo. Proin
-                      sodales pulvinar tempor. Cum sociis natoque penatibus et
-                      magnis dis parturient montes, nascetur ridiculus mus. Nam
-                      fermentum, nulla luctus pharetra vulputate, felis tellus
-                      mollis orci, sed rhoncus sapien nunc eget odio.{" "}
-                    </p>
+                    <p>$ {courseInfo?.amount}</p>
                   </div>
                 </div>
               </div>
@@ -76,92 +77,26 @@ const CourseDetail = () => {
                 <div className="col-xl-10">
                   <div className="primContentWrap mb-2 d-xl-flex">
                     <label htmlFor className="mb-1">
-                      Component A
+                      {courseInfo.content[0].contentName}
                     </label>
                     <div>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Aenean euismod bibendum laoreet. Proin gravida dolor sit
-                        amet lacus accumsan et viverra justo commodo. Proin
-                        sodales pulvinar tempor. Cum sociis natoque penatibus et
-                        magnis dis parturient montes, nascetur ridiculus mus.
-                        Nam fermentum, nulla luctus pharetra vulputate, felis
-                        tellus mollis orci, sed rhoncus sapien nunc eget odio.{" "}
-                      </p>
-                      <div className="content-wrap mb-2 d-flex flex-wrap align-items-end">
-                        <img
-                          src="../../images/file.png"
-                          className="me-3"
-                          alt="file"
-                        />
-                        <a
-                          href="../../images/file.png"
-                          className="primColor fw-400"
-                          download="file"
-                        >
-                          <u>Download</u>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="primContentWrap mb-2 d-xl-flex">
-                    <label htmlFor className="mb-1">
-                      Component B
-                    </label>
-                    <div>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Aenean euismod bibendum laoreet. Proin gravida dolor sit
-                        amet lacus accumsan et viverra justo commodo. Proin
-                        sodales pulvinar tempor. Cum sociis natoque penatibus et
-                        magnis dis parturient montes, nascetur ridiculus mus.
-                        Nam fermentum, nulla luctus pharetra vulputate, felis
-                        tellus mollis orci, sed rhoncus sapien nunc eget odio.{" "}
-                      </p>
-                      <div className="content-wrap mb-2 d-flex flex-wrap align-items-end">
-                        <img
-                          src="../../images/file.png"
-                          className="me-3"
-                          alt="file"
-                        />
-                        <a
-                          href="../../images/file.png"
-                          className="primColor fw-400"
-                          download="file"
-                        >
-                          <u>Download</u>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="primContentWrap mb-2 d-xl-flex">
-                    <label htmlFor className="mb-1">
-                      Component C
-                    </label>
-                    <div>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Aenean euismod bibendum laoreet. Proin gravida dolor sit
-                        amet lacus accumsan et viverra justo commodo. Proin
-                        sodales pulvinar tempor. Cum sociis natoque penatibus et
-                        magnis dis parturient montes, nascetur ridiculus mus.
-                        Nam fermentum, nulla luctus pharetra vulputate, felis
-                        tellus mollis orci, sed rhoncus sapien nunc eget odio.{" "}
-                      </p>
-                      <div className="content-wrap mb-2 d-flex flex-wrap align-items-end">
-                        <img
-                          src="../../images/file.png"
-                          className="me-3"
-                          alt="file"
-                        />
-                        <a
-                          href="../../images/file.png"
-                          className="primColor fw-400"
-                          download="file"
-                        >
-                          <u>Download</u>
-                        </a>
-                      </div>
+                      <p>{courseInfo.content[0].contentDescription}</p>
+                      {courseInfo.content[0].contentFiles.map((item, index) => (
+                        <div className="content-wrap mb-2 d-flex flex-wrap align-items-end">
+                          <a
+                            title="Download"
+                            href={`${baseURL}/../${item}`}
+                            className="primColor fw-400"
+                            download="file"
+                          >
+                            <img
+                              src="images/file.png"
+                              className="me-3"
+                              alt="file"
+                            />
+                          </a>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>

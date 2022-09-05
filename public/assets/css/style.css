@@ -339,6 +339,39 @@ html body .content-wrapper {
     justify-content: center !important;
   }
 }
+.pagination > li > a:hover:not(.active) {
+  background-color: #329dde;
+
+  color: #fff;
+
+  border-radius: 5px;
+}
+
+.pagination {
+  display: inline-block;
+
+  padding-left: 15px;
+
+  padding-right: 15px;
+
+  cursor: pointer;
+
+  float: right;
+}
+
+.pagination > li {
+  display: inline-block;
+
+  background-color: #fff;
+}
+
+.pagination > li > a {
+  float: left;
+
+  padding: 8px 16px;
+
+  text-decoration: none;
+}
 ul.nav.navbar-nav.nav-right {
   margin: 25px 0 0;
 }
@@ -2464,6 +2497,30 @@ body.vertical-layout.vertical-menu.menu-expanded .main-menu-footer .content {
   color: #fff;
   background-color: #9f191f;
   border-color: #dfdfdf;
+}
+
+.services {
+  display: flex;
+  justify-content: space-between;
+}
+.first-division {
+  display: flex;
+  flex-direction: column;
+  margin: 0 5px 0.5rem 0;
+  width: 100%;
+}
+.first-division button {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  color: rgb(0, 208, 255);
+  border: 1px solid rgb(0, 208, 255);
+}
+
+.second-division button {
+  color: red;
+  border: 1px solid red;
 }
 .btn-reddit,
 .btn-reddit.disabled,

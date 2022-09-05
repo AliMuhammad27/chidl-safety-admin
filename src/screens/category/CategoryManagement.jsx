@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useWindowTitle from "screens/hooks/UseWindowTitle";
+import Pagination from "components/Pagination";
 import {
   addCategory,
   getAllCategories,
@@ -13,22 +14,23 @@ const CategoryManagement = () => {
   const dispatch = useDispatch();
   useWindowTitle("category-management");
   const [categoryName, setcategoryname] = useState("");
-  const [statuss, setstatus] = useState(true);
+  const [statuss, setstatuss] = useState("");
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchString, setSearchString] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [sort, setsort] = useState();
   const [status, setStatus] = useState("");
+  const [id, setid] = useState("");
   useEffect(() => {
     console.log("Fetching Categories");
     dispatch(getAllCategories(searchString, status, from, to, page, perPage));
-  }, [searchString, status, from, to, sort, page, perPage]);
+  }, [searchString, status, from, to, page, perPage]);
   const categories = useSelector(
     (state) => state.category?.categories?.category
   );
   console.log("Fetched Categories", categories);
+  console.log("status is changing", status);
   return (
     <div>
       <div className="app-content content dashboard">
@@ -70,6 +72,10 @@ const CategoryManagement = () => {
                       <form action="#">
                         <input
                           type="search"
+                          value={searchString}
+                          onChange={(e) => {
+                            setSearchString(e.target.value);
+                          }}
                           id="search-inp"
                           className="dashInput search-input w-100"
                           placeholder="Search...."
@@ -87,6 +93,10 @@ const CategoryManagement = () => {
                       <label className="mr-xl-2 mr-2">From:</label>
                       <input
                         type="date"
+                        value={from}
+                        onChange={(e) => {
+                          setFrom(e.target.value);
+                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -97,6 +107,10 @@ const CategoryManagement = () => {
                       <label className="mr-xl-2 mr-2">To:</label>
                       <input
                         type="date"
+                        value={to}
+                        onChange={(e) => {
+                          setTo(e.target.value);
+                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -107,10 +121,15 @@ const CategoryManagement = () => {
                       <label className="mr-xl-2 mr-2 mb-3">
                         Service Status
                       </label>
-                      <select className="dashInput sm-dropdown mb-3">
+                      <select
+                        className="dashInput sm-dropdown mb-3"
+                        onChange={(e) => {
+                          setStatus(e.target.value);
+                        }}
+                      >
                         <option value="Status">Status</option>
-                        <option value="Active">Active</option>
-                        <option value="InActive">InActive</option>
+                        <option value="true">Active</option>
+                        <option value="false">InActive</option>
                       </select>
                     </div>
                   </div>
@@ -145,8 +164,19 @@ const CategoryManagement = () => {
                                         <td>24</td>
                                         <td>
                                           <div className="maindropdown">
-                                            <button className="maindropbtn cGreen">
-                                              Active
+                                            <button
+                                              className={
+                                                item?.status
+                                                  ? "maindropbtn cGreen"
+                                                  : "maindropbtn text-danger"
+                                              }
+                                            >
+                                              {item?.status ? (
+                                                <>Active</>
+                                              ) : (
+                                                <>In-Active</>
+                                              )}
+
                                               <i className="fas fa-caret-down ps-2" />
                                             </button>
                                             <div className="customDropdown-content">
@@ -156,7 +186,11 @@ const CategoryManagement = () => {
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#inactivateThis"
                                               >
-                                                In-Active
+                                                {item?.status ? (
+                                                  <>In-Active</>
+                                                ) : (
+                                                  <>Active</>
+                                                )}
                                               </a>
                                             </div>
                                           </div>
@@ -216,7 +250,7 @@ const CategoryManagement = () => {
                   </div>
                 </div>
                 <div className="row align-items-center  my-md-3 p-md-3 p-2 m-2 table-responsive">
-                  <div className="col-lg-5 col-sm-12 col-md-12">
+                  {/* <div className="col-lg-5 col-sm-12 col-md-12">
                     <h6 className="pagination-details">
                       {" "}
                       Showing 05 out of 40 records{" "}
@@ -262,7 +296,17 @@ const CategoryManagement = () => {
                         </div>
                       </ul>
                     </div>
-                  </div>
+                  </div> */}
+                  {categories?.docs?.length > 0 && (
+                    <Pagination
+                      totalDocs={categories?.totalDocs}
+                      totalPages={categories?.totalPages}
+                      currentPage={categories?.page}
+                      setPage={setPage}
+                      hasNextPage={categories?.hasNextPage}
+                      hasPrevPage={categories?.hasPrevPage}
+                    />
+                  )}
                 </div>
                 {/* User Management Ends */}
               </div>
@@ -565,19 +609,30 @@ const CategoryManagement = () => {
                   <select
                     className="modal-select"
                     onChange={(e) => {
-                      setstatus(e.target.value);
+                      setstatuss(e.target.value);
                     }}
                   >
                     <option value>Select Status</option>
-                    <option value={true}>Active</option>
-                    <option value={false}>InActive</option>
+                    <option value="true">Active</option>
+                    <option value="false">InActive</option>
                   </select>
                 </div>
                 <div className="modal-footer">
                   <button
                     onClick={(e) => {
                       categoryName.length > 0 && statuss
-                        ? dispatch(addCategory(categoryName, statuss))
+                        ? dispatch(
+                            addCategory(
+                              categoryName,
+                              statuss,
+                              searchString,
+                              status,
+                              from,
+                              to,
+                              page,
+                              perPage
+                            )
+                          )
                         : Toasty(
                             "Error",
                             "Please fill all the required fields"

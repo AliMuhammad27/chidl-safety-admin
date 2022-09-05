@@ -255,21 +255,21 @@ const SideBar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <a href="/courses">
+              <Link to="/courses">
                 <i className="fas fa-graduation-cap" />
                 <span className="menu-title" data-i18n>
                   course
                 </span>
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a href="../quiz/index.php">
+              <Link to="/quiz">
                 {" "}
                 <i className="fas fa-lightbulb" />{" "}
                 <span className="menu-title" data-i18n>
                   Quiz
                 </span>
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
               <Link to="/products">
@@ -280,36 +280,36 @@ const SideBar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <a href="/attribute-management">
+              <Link to="/attribute-management">
                 <i className="fab fa-steam-symbol" />
                 <span className="menu-title" data-i18n>
                   Attribute Managment
                 </span>
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a href="../orderManagement/index.php">
+              <Link to="/order-management">
                 <i className="fas fa-clipboard-list" />
                 <span className="menu-title" data-i18n>
                   Order Managment
                 </span>
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a href="../payLogs/index.php">
+              <Link to="/payments-logs">
                 <i className="fas fa-boxes" />
                 <span className="menu-title" data-i18n>
                   Pay Logs
                 </span>
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a href="/category-management">
+              <Link to="/category-management">
                 <i className="fas fa-th" />
                 <span className="menu-title" data-i18n>
                   Category Management
                 </span>
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
               <Link to="/subscription-management">
@@ -320,20 +320,20 @@ const SideBar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <a href="../feedbacks/index.php">
+              <Link to="/feedbacks">
                 <i className="fas fa-th-large" />
                 <span className="menu-title" data-i18n>
                   Feedbacks
                 </span>
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a href="../cms/index.php">
+              <Link to="/cms/index.php">
                 <i className="fas fa-th-large" />
                 <span className="menu-title" data-i18n>
                   CMS
                 </span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
