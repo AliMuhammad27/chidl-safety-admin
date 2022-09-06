@@ -33,7 +33,9 @@ const EditProfile = ({ history }) => {
           {/* Basic form layout section start */}
           <section id="configuration">
             <div className="d-flex align-items-center my-3">
-              <i className="fas fa-arrow-left me-3 go-back-icon" />
+              <Link to="/profile">
+                <i className="fas fa-arrow-left me-3 go-back-icon" />
+              </Link>
               <h1 className="page-title fw-800 primFont mb-0">Edit Profile</h1>
             </div>
             {/* User Details Starts */}

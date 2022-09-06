@@ -4,6 +4,8 @@ import {
   GET_PRODUCT,
   GET_PRODUCTS,
   GET_PRODUCTS_ERROR,
+  EDIT_PRODUCT,
+  EDIT_PRODUCT_ERROR,
 } from "redux/action/actionTypes";
 const initialState = {
   products: null,
@@ -22,6 +24,12 @@ const productReducer = (state = initialState, action) => {
         productAdded: payload,
         isLoading: false,
       };
+    case EDIT_PRODUCT:
+      return {
+        ...state,
+        productEdited: payload,
+        isLoading: false,
+      };
     case GET_PRODUCTS:
       return {
         ...state,
@@ -37,6 +45,7 @@ const productReducer = (state = initialState, action) => {
     case ADD_PRODUCT_ERROR:
     case GET_PRODUCTS_ERROR:
     case GET_PRODUCTS_ERROR:
+    case EDIT_PRODUCT_ERROR:
       return {
         ...state,
         products: null,

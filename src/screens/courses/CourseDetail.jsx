@@ -77,26 +77,28 @@ const CourseDetail = ({ match }) => {
                 <div className="col-xl-10">
                   <div className="primContentWrap mb-2 d-xl-flex">
                     <label htmlFor className="mb-1">
-                      {courseInfo.content[0].contentName}
+                      {courseInfo?.content[0]?.contentName}
                     </label>
                     <div>
-                      <p>{courseInfo.content[0].contentDescription}</p>
-                      {courseInfo.content[0].contentFiles.map((item, index) => (
-                        <div className="content-wrap mb-2 d-flex flex-wrap align-items-end">
-                          <a
-                            title="Download"
-                            href={`${baseURL}/../${item}`}
-                            className="primColor fw-400"
-                            download="file"
-                          >
-                            <img
-                              src="images/file.png"
-                              className="me-3"
-                              alt="file"
-                            />
-                          </a>
-                        </div>
-                      ))}
+                      <p>{courseInfo?.content[0]?.contentDescription}</p>
+                      {courseInfo?.content[0]?.contentFiles.map(
+                        (item, index) => (
+                          <div className="content-wrap mb-2 d-flex flex-wrap align-items-end">
+                            <a
+                              title="Download"
+                              href={`${baseURL}/../${item}`}
+                              className="primColor fw-400"
+                              download="file"
+                            >
+                              <img
+                                src="images/file.png"
+                                className="me-3"
+                                alt="file"
+                              />
+                            </a>
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 </div>

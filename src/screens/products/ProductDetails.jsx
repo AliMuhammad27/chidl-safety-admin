@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { imageUrl } from "util/api";
 import { Link } from "react-router-dom";
 import { getProductDetails } from "redux/action/product";
+import ImageSlider from "components/ImageSlider";
 const ProductDetails = ({ match }) => {
   const dispatch = useDispatch();
   const [images, setImages] = useState([]);
-  const productInfo = useSelector((state) => state?.product?.product);
+  const productInfo = useSelector((state) => state?.product?.product?.product);
   console.log("productInfo", productInfo);
   useEffect(() => {
     dispatch(getProductDetails(match.params.id));
@@ -35,97 +35,40 @@ const ProductDetails = ({ match }) => {
             <div className="box my-5">
               <div className="row">
                 <div className="col-xxl-6">
-                  <div className="product_slider  my-3">
-                    <div className="slider slider-for">
-                      <div>
-                        <img
-                          src="../../images/services.png"
-                          className="img-fluid main-slide-image"
-                          alt="image"
-                        />
-                      </div>
-                      <div>
-                        <img
-                          src="../../images/p1.png"
-                          className="img-fluid main-slide-image"
-                          alt="image"
-                        />
-                      </div>
-                      <div>
-                        <img
-                          src="../../images/p2.png"
-                          className="img-fluid main-slide-image"
-                          alt="image"
-                        />
-                      </div>
-                      <div>
-                        <img
-                          src="../../images/p3.png"
-                          className="img-fluid main-slide-image"
-                          alt="image"
-                        />
-                      </div>
-                      <div>
-                        <img
-                          src="../../images/p4.png"
-                          className="img-fluid main-slide-image"
-                          alt="image"
-                        />
+                  {
+                    <div className="product_slider  my-3">
+                      <div className="slider slider-for">
+                        <ImageSlider images={images} />
                       </div>
                     </div>
-                    <div className="slider slider-nav">
-                      <div className="slider-nav-img">
-                        <img
-                          src="../../images/services.png"
-                          className="img-fluid sub-slide-image"
-                          alt="image"
-                        />
-                      </div>
-                      <div className="slider-nav-img">
-                        <img
-                          src="../../images/p1.png"
-                          className="img-fluid sub-slide-image"
-                          alt="image"
-                        />
-                      </div>
-                      <div className="slider-nav-img">
-                        <img
-                          src="../../images/p2.png"
-                          className="img-fluid sub-slide-image"
-                          alt="image"
-                        />
-                      </div>
-                      <div className="slider-nav-img">
-                        <img
-                          src="../../images/p3.png"
-                          className="img-fluid sub-slide-image"
-                          alt="image"
-                        />
-                      </div>
-                      <div className="slider-nav-img">
-                        <img
-                          src="../../images/p4.png"
-                          className="img-fluid sub-slide-image"
-                          alt="image"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  }
                 </div>
                 <div className="col-xxl-6">
                   <div className="product-details-wrap my-3">
                     <div className="d-flex align-items-center justify-content-between flex-wrap">
                       <h3 className="heading-sm primFont fw-600">
-                        Product Name{" "}
-                        <small className="prim-text">(20 Product Left)</small>{" "}
+                        {productInfo?.productName}{" "}
+                        <small className="prim-text">
+                          ({productInfo?.instock} Product Left)
+                        </small>{" "}
                       </h3>
                       <h1 className="cms-subcard-title fw-800 primFont mb-4">
                         {" "}
-                        Status : <span className="cGreen"> Accepted </span>{" "}
+                        Status :{" "}
+                        <span
+                          className={productInfo?.status ? "cGreen" : "cRed"}
+                        >
+                          {" "}
+                          {productInfo?.status ? (
+                            <>Accepted</>
+                          ) : (
+                            <>Pending</>
+                          )}{" "}
+                        </span>{" "}
                       </h1>
                     </div>
                     <h2 className="heading-md fw-600 primColor primFont">
-                      $47
+                      ${productInfo?.price}
                     </h2>
                     <div className="custom_selector">
                       <input
@@ -198,18 +141,7 @@ const ProductDetails = ({ match }) => {
                           role="tabpanel"
                           aria-labelledby="pills-Details-tab"
                         >
-                          <p>
-                            ipsum dolor sit amet, consectetur adipiscing elit.
-                            Aenean euismod bibendum laoreet. Proin gravida dolor
-                            sit amet lacus accumsan et viverra justo commodo.
-                            Proin sodales pulvinar tempor. Cum sociis natoque
-                            penatibus et magnis dis parturient montes, nascetur
-                            ridiculus mus. Nam fermentum, nulla luctus pharetra
-                            vulputate, felis tellus mollis orci, sed rhoncus
-                            sapien nunc eget odio. Lorem ipsum dolor sit amet,
-                            consectetur adipiscing elit. Aenean euismod bibendum
-                            laoreet. Proin gravida dolor sit amet lacus
-                          </p>
+                          <p>{productInfo?.description}</p>
                         </div>
                         <div
                           className="tab-pane fade"
@@ -217,18 +149,7 @@ const ProductDetails = ({ match }) => {
                           role="tabpanel"
                           aria-labelledby="pills-use-tab"
                         >
-                          <p>
-                            ipsum dolor sit amet, consectetur adipiscing elit.
-                            Aenean euismod bibendum laoreet. Proin gravida dolor
-                            sit amet lacus accumsan et viverra justo commodo.
-                            Proin sodales pulvinar tempor. Cum sociis natoque
-                            penatibus et magnis dis parturient montes, nascetur
-                            ridiculus mus. Nam fermentum, nulla luctus pharetra
-                            vulputate, felis tellus mollis orci, sed rhoncus
-                            sapien nunc eget odio. Lorem ipsum dolor sit amet,
-                            consectetur adipiscing elit. Aenean euismod bibendum
-                            laoreet. Proin gravida dolor sit amet lacus
-                          </p>
+                          <p>{productInfo?.usage}</p>
                         </div>
                       </div>
                     </div>
@@ -245,7 +166,7 @@ const ProductDetails = ({ match }) => {
                   <div className="d-flex mb-1 py-1">
                     <div className="user_avatar">
                       <img
-                        src="../../images/avatar3.png"
+                        src="images/avatar3.png"
                         className="img-fluid user-avatar mr-2"
                         alt="user image"
                       />
@@ -270,7 +191,7 @@ const ProductDetails = ({ match }) => {
                   <div className="d-flex mb-1 py-1">
                     <div className="user_avatar">
                       <img
-                        src="../../images/avatar3.png"
+                        src="images/avatar3.png"
                         className="img-fluid user-avatar mr-2"
                         alt="user image"
                       />
@@ -295,7 +216,7 @@ const ProductDetails = ({ match }) => {
                   <div className="d-flex mb-1 py-1">
                     <div className="user_avatar">
                       <img
-                        src="../../images/avatar3.png"
+                        src="images/avatar3.png"
                         className="img-fluid user-avatar mr-2"
                         alt="user image"
                       />
@@ -320,7 +241,7 @@ const ProductDetails = ({ match }) => {
                   <div className="d-flex mb-1 py-1">
                     <div className="user_avatar">
                       <img
-                        src="../../images/avatar3.png"
+                        src="images/avatar3.png"
                         className="img-fluid user-avatar mr-2"
                         alt="user image"
                       />

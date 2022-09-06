@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllServices } from "redux/action/service";
+import { getAllServices, toggleActiveStatus } from "redux/action/service";
 import moment from "moment";
 import Pagination from "components/Pagination";
 const Services = () => {
@@ -175,12 +175,26 @@ const Services = () => {
                                               <a
                                                 href="#"
                                                 type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target={
-                                                  item?.status
-                                                    ? "#inactivateThis"
-                                                    : "#activateThis"
-                                                }
+                                                onClick={(e) => {
+                                                  dispatch(
+                                                    toggleActiveStatus(
+                                                      item?._id,
+                                                      searchString,
+                                                      status,
+                                                      from,
+                                                      to,
+                                                      page,
+                                                      perPage
+                                                    )
+                                                  );
+                                                  e.preventDefault();
+                                                }}
+                                                //data-bs-toggle="modal"
+                                                // data-bs-target={
+                                                //   item?.status
+                                                //     ? "#inactivateThis"
+                                                //     : "#activateThis"
+                                                // }
                                               >
                                                 {item?.status ? (
                                                   <>In-Active</>

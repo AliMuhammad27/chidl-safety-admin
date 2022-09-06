@@ -64,3 +64,16 @@ export const getServiceDetails = (id) => async (dispatch) => {
     });
   }
 };
+
+export const toggleActiveStatus =
+  (id, searchString, status, from, to, page, perPage) => async (dispatch) => {
+    try {
+      const res = await api.get(`/service/toggleStatus/${id}`);
+      Success(res.data.message, "Successfull");
+      dispatch(getAllServices(searchString, status, from, to, page, perPage));
+    } catch (err) {
+      dispatch({
+        type: GET_SERVICE_DETAILS_ERROR,
+      });
+    }
+  };

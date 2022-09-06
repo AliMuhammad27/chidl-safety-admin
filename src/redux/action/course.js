@@ -5,6 +5,8 @@ import {
   GET_COURSES_ERROR,
   GET_COURSE_DETAILS,
   GET_COURSE_DETAILS_ERROR,
+  TOGGLE_ACTIVE_ERROR,
+  TOGGLE_ACTIVE,
 } from "./actionTypes";
 import api from "util/api";
 import Success from "components/modals/Modal.Success";
@@ -58,3 +60,16 @@ export const getCourseDetails = (id) => async (dispatch) => {
     });
   }
 };
+
+export const toggleActiveStatus =
+  (id, searchString, status, from, to, page, perPage) => async (dispatch) => {
+    try {
+      const res = await api.get(`/course/toggleActiveStatus/${id}`);
+      Success(res.data.message, "Successfull");
+      dispatch(getAllCourses(searchString, status, from, to, page, perPage));
+    } catch (err) {
+      dispatch({
+        type: GET_COURSES_ERROR,
+      });
+    }
+  };

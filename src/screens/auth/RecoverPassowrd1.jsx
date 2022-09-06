@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
-const RecoverPassowrd1 = () => {
+import { useDispatch } from "react-redux";
+import { forgetPassword } from "redux/action/auth";
+import Toasty from "util/toast";
+const RecoverPassowrd1 = ({ history }) => {
+  const dispatch = useDispatch();
+  const [email, setemail] = useState("");
   return (
     <section className="authPage">
       <div className="align-items-center d-flex sideLink  go-back-icon ">
-        <i className="fas fa-arrow-left pe-2" />
         <Link to="/" clLinkssName="d-inline-block">
-          Go Back
+          <i className="fas fa-arrow-left pe-2" />
         </Link>
       </div>
       <div className="container">
@@ -17,7 +20,7 @@ const RecoverPassowrd1 = () => {
               <form action="/verification-code">
                 <div className="text-center mb-5">
                   <img
-                    src="../../images/logo.png"
+                    src="images/logo.png"
                     alt="signIn"
                     className="logo img-fluid"
                   />
@@ -33,13 +36,30 @@ const RecoverPassowrd1 = () => {
                   </label>
                   <input
                     id="email"
+                    value={email}
+                    onChange={(e) => {
+                      setemail(e.target.value);
+                    }}
                     type="email"
                     placeholder="Enter Email Address"
                     className="auth-input passInput"
                   />
                 </div>
                 <div className="text-center my-3 mb-2">
-                  <button className="prim-btn w-100">Continue</button>
+                  <button
+                    className="prim-btn w-100"
+                    onClick={(e) => {
+                      email.length > 0
+                        ? dispatch(forgetPassword(email, history))
+                        : Toasty(
+                            "Error",
+                            "please fill all the required fields"
+                          );
+                      e.preventDefault();
+                    }}
+                  >
+                    Continue
+                  </button>
                 </div>
               </form>
             </div>

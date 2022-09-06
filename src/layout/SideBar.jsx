@@ -24,14 +24,14 @@ const SideBar = () => {
               </li>
               <li className="nav-item">
                 {" "}
-                <a className="navbar-brand" href="../dashboard/index.php">
+                <Link className="navbar-brand" to="/">
                   {" "}
                   <img
                     className="brand-logo img-fluid"
                     alt="admin logo"
                     src="images/logo.png"
                   />{" "}
-                </a>{" "}
+                </Link>{" "}
               </li>
               <li className="nav-item d-md-none">
                 {" "}

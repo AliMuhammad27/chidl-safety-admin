@@ -185,7 +185,7 @@ const Products = () => {
                                               </Link>
                                               <Link
                                                 className="dropdown-item"
-                                                to="/edit-product/:id"
+                                                to={`/edit-product/${item?._id}`}
                                               >
                                                 <i className="fas fa-edit" />
                                                 Edit

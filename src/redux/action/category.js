@@ -13,6 +13,7 @@ import {
 } from "./actionTypes";
 import api from "../../util/api";
 import Success from "components/modals/Modal.Success";
+import Success1 from "components/modals/CustomModal";
 export const addCategory =
   (categoryName, statuss, searchString, status, from, to, page, perPage) =>
   async (dispatch) => {
@@ -81,7 +82,6 @@ export const getCategoryDetails = (id) => async (dispatch) => {
     });
   }
 };
-
 export const editCategory = (id, formData, history) => async (dispatch) => {
   try {
     const res = await api.post(`course/edit-course/${id}`, formData);
@@ -97,3 +97,16 @@ export const editCategory = (id, formData, history) => async (dispatch) => {
     });
   }
 };
+
+export const toggleActiveStatus =
+  (id, searchString, status, from, to, page, perPage) => async (dispatch) => {
+    try {
+      const res = await api.get(`/category/toggleStatus/${id}`);
+      Success(res?.data?.message);
+      dispatch(getAllCategories(searchString, status, from, to, page, perPage));
+    } catch (err) {
+      dispatch({
+        type: EDIT_CATEGORY_ERROR,
+      });
+    }
+  };

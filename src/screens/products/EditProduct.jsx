@@ -1,7 +1,68 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategoires } from "redux/action/category";
+import { getAttributes } from "redux/action/attribute";
+import { getProductDetails } from "redux/action/product";
 
-const EditProduct = () => {
+const EditProduct = ({ match, history }) => {
+  const productInfo = useSelector((state) => state?.product?.product?.product);
+  const dispatch = useDispatch();
+  console.log("productInfo", productInfo);
+  useEffect(() => {
+    console.log("Running");
+    dispatch(getProductDetails(match.params.id));
+  }, [match.params.id]);
+  const cats = useSelector((state) => state?.category?.allcategories?.category);
+  const atts = useSelector(
+    (state) => state?.attribute?.allattributes?.attribute
+  );
+  const [productName, setproductname] = useState("");
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [searchParam, setSearchString] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [sort, setsort] = useState();
+  const [status, setStatus] = useState("");
+  const [category, setcategory] = useState("");
+  const [attribute, setattribute] = useState("");
+  const [price, setprice] = useState("");
+  const [instock, setinstock] = useState("");
+  const [edit, setIsEdit] = useState(false);
+  const [description, setdescription] = useState("");
+  const [usage, setusage] = useState("");
+  const [productImage, setProductImage] = useState([]);
+  const [data, setData] = useState({
+    project_images: [],
+  });
+  const { project_images } = data;
+  const formData = new FormData();
+  formData.append("productName", productName);
+  formData.append("description", description);
+  formData.append("usage", usage);
+  formData.append("price", price);
+  formData.append("instock", instock);
+  formData.append("category", category);
+  formData.append("attribute", attribute);
+  console.log("project images", project_images);
+  project_images.forEach((reciept) => formData.append("reciepts", reciept));
+  useEffect(() => {
+    dispatch(getCategoires());
+    dispatch(getAttributes());
+  }, []);
+  console.log("Cats", atts);
+  console.log("Category", category);
+  console.log("FormData", formData);
+  useEffect(() => {
+    if (productInfo) {
+      setproductname(productInfo?.productName);
+      setprice(productInfo?.price);
+      setinstock(productInfo?.instock);
+      setdescription(productInfo?.description);
+      setusage(productInfo?.usage);
+    }
+  }, [productInfo]);
   return (
     <div className="app-content content dashboard">
       <div className="content-wrapper">
@@ -179,6 +240,10 @@ const EditProduct = () => {
                       <input
                         id="prod_name"
                         type="text"
+                        value={productName}
+                        onChange={(e) => {
+                          setproductname(e.target.value);
+                        }}
                         placeholder="Enter Name of Product"
                         defaultValue="ADAFFDGFG"
                         className="auth-input mx-0"
@@ -195,6 +260,10 @@ const EditProduct = () => {
                         name
                         id="productDetails"
                         rows={5}
+                        value={description}
+                        onChange={(e) => {
+                          setdescription(e.target.value);
+                        }}
                         className="w-100 mx-0"
                         placeholder="ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor "
                         defaultValue={""}
@@ -210,6 +279,10 @@ const EditProduct = () => {
                       <textarea
                         name
                         id="how_to_use"
+                        value={usage}
+                        onChange={(e) => {
+                          setusage(e.target.value);
+                        }}
                         rows={5}
                         className="w-100 mx-0"
                         placeholder="ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor "
@@ -264,6 +337,10 @@ const EditProduct = () => {
                       <input
                         id="inv_name"
                         type="number"
+                        value={instock}
+                        onChange={(e) => {
+                          setinstock(e.target.value);
+                        }}
                         placeholder={124}
                         defaultValue={124}
                         className="auth-input mx-0"
@@ -280,5 +357,4 @@ const EditProduct = () => {
     </div>
   );
 };
-
 export default EditProduct;

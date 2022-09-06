@@ -4,12 +4,21 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILED,
   LOGOUT,
+  FORGET_PASSWORD,
+  FORGET_PASSWORD_ERROR,
+  RESET_PASSWORD,
+  RESET_PASSWORD_ERROR,
+  VERIFY_CODE,
+  VERIFY_CODE_ERROR,
 } from "../action/actionTypes";
 
 const initialState = {
   token: localStorage.getItem("token"),
   isAuthenticated: null,
   isLoading: true,
+  email: null,
+  code: null,
+  reset: null,
   admin: null,
 };
 
@@ -23,6 +32,24 @@ const authReducer = (state = initialState, action) => {
         isLoading: false,
         admin: payload,
       };
+    case FORGET_PASSWORD:
+      return {
+        ...state,
+        email: payload,
+        isLoading: false,
+      };
+    case VERIFY_CODE:
+      return {
+        ...state,
+        code: payload,
+        isLoading: false,
+      };
+    case RESET_PASSWORD:
+      return {
+        ...state,
+        reset: payload,
+        isLoading: false,
+      };
     case LOGIN_SUCCESS:
       localStorage.setItem("token", payload.token);
       return {
@@ -31,6 +58,7 @@ const authReducer = (state = initialState, action) => {
         isAuthenticated: true,
         isLoading: false,
       };
+
     case LOGIN_FAILED:
     case AUTH_ERROR:
     case LOGOUT:

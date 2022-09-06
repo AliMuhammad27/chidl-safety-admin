@@ -1,10 +1,19 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { updatePassword } from "redux/action/profile";
 import { imageUrl } from "util/api";
+import Toasty from "util/toast";
 const Profile = () => {
+  const dispatch = useDispatch();
+  const [newpassword, setnewpassword] = useState("");
+  const [confirm_password, setconfirmpassword] = useState("");
   const [existingpassword, setexistingpassword] = useState("");
+  const [passwordShown, setPasswordShown] = useState(false);
   const adminInfo = useSelector((state) => state.auth?.admin);
+  const togglePassword = () => {
+    setPasswordShown(!passwordShown);
+  };
   console.log("AdmingInfo", adminInfo);
   return (
     <div className="app-content content dashboard">
@@ -97,11 +106,17 @@ const Profile = () => {
                     <input
                       id="pass"
                       type="password"
+                      value={existingpassword}
+                      type={passwordShown ? "text" : "password"}
+                      onChange={(e) => {
+                        setexistingpassword(e.target.value);
+                      }}
                       placeholder="Enter Current Password"
                       className="auth-input passInput mx-0"
                     />
                     <button
                       className="not_btn passDisplay authIcon2 p-0"
+                      onClick={togglePassword}
                       type="button"
                     >
                       <i className="fas fa-eye-slash" aria-hidden="true" />
@@ -118,12 +133,18 @@ const Profile = () => {
                   <div className="position-relative passwordWrapper">
                     <input
                       id="n_pass"
+                      value={newpassword}
+                      type={passwordShown ? "text" : "password"}
+                      onChange={(e) => {
+                        setnewpassword(e.target.value);
+                      }}
                       type="password"
                       placeholder="Enter New Password"
                       className="auth-input passInput mx-0"
                     />
                     <button
                       className="not_btn passDisplay authIcon2 p-0"
+                      onClick={togglePassword}
                       type="button"
                     >
                       <i className="fas fa-eye-slash" aria-hidden="true" />
@@ -141,12 +162,18 @@ const Profile = () => {
                     <input
                       id="c_pass"
                       type="password"
+                      value={confirm_password}
+                      type={passwordShown ? "text" : "password"}
+                      onChange={(e) => {
+                        setconfirmpassword(e.target.value);
+                      }}
                       placeholder="Confirm Password"
                       className="auth-input passInput mx-0"
                     />
                     <button
                       className="not_btn passDisplay authIcon2 p-0"
                       type="button"
+                      onClick={togglePassword}
                     >
                       <i className="fas fa-eye-slash" aria-hidden="true" />
                     </button>
@@ -154,6 +181,22 @@ const Profile = () => {
                 </div>
                 <div className="modal-footer">
                   <button
+                    onClick={(e) => {
+                      confirm_password.length > 0 &&
+                      newpassword.length > 0 &&
+                      confirm_password.length > 0
+                        ? dispatch(
+                            updatePassword(
+                              existingpassword,
+                              newpassword,
+                              confirm_password
+                            )
+                          )
+                        : Toasty(
+                            "Error",
+                            "please fill all the required fields"
+                          );
+                    }}
                     type="button"
                     className="prim-btn cmsbtnPrim my-1"
                     data-bs-dismiss="modal"

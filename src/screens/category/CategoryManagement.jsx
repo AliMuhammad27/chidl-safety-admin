@@ -4,6 +4,7 @@ import Pagination from "components/Pagination";
 import {
   addCategory,
   getAllCategories,
+  toggleActiveStatus,
   getCategoryDetails,
   editCategory,
   deleteTax,
@@ -176,21 +177,38 @@ const CategoryManagement = () => {
                                               ) : (
                                                 <>In-Active</>
                                               )}
-
                                               <i className="fas fa-caret-down ps-2" />
                                             </button>
                                             <div className="customDropdown-content">
                                               <a
                                                 href="#"
                                                 type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#inactivateThis"
+                                                onClick={(e) => {
+                                                  dispatch(
+                                                    toggleActiveStatus(
+                                                      item?._id,
+                                                      searchString,
+                                                      status,
+                                                      from,
+                                                      to,
+                                                      page,
+                                                      perPage
+                                                    )
+                                                  );
+                                                  e.preventDefault();
+                                                }}
+                                                //data-bs-toggle="modal"
+                                                // data-bs-target={
+                                                //   item?.status
+                                                //     ? "#inactivateThis"
+                                                //     : "#activateThis"
+                                                // }
                                               >
                                                 {item?.status ? (
                                                   <>In-Active</>
                                                 ) : (
                                                   <>Active</>
-                                                )}
+                                                )}{" "}
                                               </a>
                                             </div>
                                           </div>

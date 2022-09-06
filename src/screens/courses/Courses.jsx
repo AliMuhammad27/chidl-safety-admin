@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import Pagination from "components/Pagination";
-import { getAllCourses } from "redux/action/course";
+import { getAllCourses, toggleActiveStatus } from "redux/action/course";
 import moment from "moment";
 const Courses = () => {
   const dispatch = useDispatch();
@@ -13,6 +13,7 @@ const Courses = () => {
   const [to, setTo] = useState("");
   const [sort, setsort] = useState();
   const [status, setStatus] = useState("");
+  const [id, setid] = useState("");
   useEffect(() => {
     console.log("Fetching Courses");
     dispatch(getAllCourses(searchString, status, from, to, page, perPage));
@@ -63,6 +64,10 @@ const Courses = () => {
                       <form action="#">
                         <input
                           type="search"
+                          value={searchString}
+                          onChange={(e) => {
+                            setSearchString(e.target.value);
+                          }}
                           id="search-inp"
                           className="dashInput search-input w-100"
                           placeholder="Search...."
@@ -80,6 +85,10 @@ const Courses = () => {
                       <label className="mr-xl-2 mr-2">From:</label>
                       <input
                         type="date"
+                        value={from}
+                        onChange={(e) => {
+                          setFrom(e.target.value);
+                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -90,6 +99,10 @@ const Courses = () => {
                       <label className="mr-xl-2 mr-2">To:</label>
                       <input
                         type="date"
+                        value={to}
+                        onChange={(e) => {
+                          setTo(e.target.value);
+                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -100,10 +113,15 @@ const Courses = () => {
                       <label className="mr-xl-2 mr-2 mb-3">
                         Service Status
                       </label>
-                      <select className="dashInput sm-dropdown mb-3">
+                      <select
+                        className="dashInput sm-dropdown mb-3"
+                        onChange={(e) => {
+                          setStatus(e.target.value);
+                        }}
+                      >
                         <option value="Status">Status</option>
-                        <option value="Active">Active</option>
-                        <option value="InActive">InActive</option>
+                        <option value="true">Active</option>
+                        <option value="false">InActive</option>
                       </select>
                     </div>
                   </div>
@@ -140,18 +158,50 @@ const Courses = () => {
                                         </td>
                                         <td>
                                           <div className="maindropdown">
-                                            <button className="maindropbtn cGreen">
-                                              Active
+                                            <button
+                                              className={
+                                                item?.status
+                                                  ? "maindropbtn cGreen"
+                                                  : "maindropbtn text-danger"
+                                              }
+                                            >
+                                              {item?.status ? (
+                                                <>Active</>
+                                              ) : (
+                                                <>In-Active</>
+                                              )}
                                               <i className="fas fa-caret-down ps-2" />
                                             </button>
                                             <div className="customDropdown-content">
                                               <a
                                                 href="#"
                                                 type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#inactivateThis"
+                                                onClick={(e) => {
+                                                  dispatch(
+                                                    toggleActiveStatus(
+                                                      item?._id,
+                                                      searchString,
+                                                      status,
+                                                      from,
+                                                      to,
+                                                      page,
+                                                      perPage
+                                                    )
+                                                  );
+                                                  e.preventDefault();
+                                                }}
+                                                //data-bs-toggle="modal"
+                                                // data-bs-target={
+                                                //   item?.status
+                                                //     ? "#inactivateThis"
+                                                //     : "#activateThis"
+                                                // }
                                               >
-                                                In-Active
+                                                {item?.status ? (
+                                                  <>In-Active</>
+                                                ) : (
+                                                  <>Active</>
+                                                )}{" "}
                                               </a>
                                             </div>
                                           </div>
@@ -283,7 +333,7 @@ const Courses = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/sure.png" alt="sure" />
+                <img src="images/sure.png" alt="sure" />
               </div>
               <div className="main-modal-msg">
                 <h4 className="section-heading fw-800 my-4">Inactivate</h4>
