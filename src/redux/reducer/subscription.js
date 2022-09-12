@@ -3,6 +3,10 @@ import {
   CREATE_SUBSCRIPTION_ERROR,
   GET_SUBSCRIPTIONS,
   GET_SUBSCRIPTIONS_ERROR,
+  EDIT_SUBSCRIPTION,
+  EDIT_SUBSCRIPTION_ERROR,
+  GET_SUBSCRIPTION,
+  GET_SUBSCRIPTION_ERROR,
 } from "redux/action/actionTypes";
 const initialState = {
   subscriptions: null,
@@ -21,6 +25,13 @@ const subscriptionReducer = (state = initialState, action) => {
         subscriptionAdded: payload,
         isLoading: false,
       };
+    case EDIT_SUBSCRIPTION:
+      return {
+        ...state,
+        subscriptionEdited: payload,
+        isLoading: false,
+      };
+
     case GET_SUBSCRIPTIONS:
       return {
         ...state,
