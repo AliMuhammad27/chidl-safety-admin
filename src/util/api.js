@@ -4,7 +4,7 @@ import axios from "axios";
 export let baseURL;
 export let imageUrl;
 
-if (window.location.hostname == "localhost") {
+if (window.location.hostname === "localhost") {
   baseURL = "https://localhost:6068/api";
   imageUrl = "https://localhost:6068/";
 } else {

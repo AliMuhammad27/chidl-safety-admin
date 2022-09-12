@@ -1,25 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
-import Pagination from "components/Pagination";
-import { getAllCourses, toggleActiveStatus } from "redux/action/course";
-import moment from "moment";
-const Courses = () => {
-  const dispatch = useDispatch();
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
-  const [searchString, setSearchString] = useState("");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
-  const [sort, setsort] = useState();
-  const [status, setStatus] = useState("");
-  const [id, setid] = useState("");
-  useEffect(() => {
-    console.log("Fetching Courses");
-    dispatch(getAllCourses(searchString, status, from, to, page, perPage));
-  }, [searchString, status, from, to, sort, page, perPage]);
-  const courses = useSelector((state) => state.course?.courses?.course);
-  console.log("Fetched Courses", courses);
+import React from "react";
+import { Link } from "react-router-dom";
+
+const CmsLogs = () => {
   return (
     <div>
       <div className="app-content content dashboard">
@@ -27,23 +9,7 @@ const Courses = () => {
           <div className="content-body">
             {/* Basic form layout section start */}
             <section id="configuration">
-              <div className="d-flex align-items-center justify-content-between text-center flex-wrap">
-                <h1 className="page-title fw-800 primFont mb-4 ">Courses</h1>
-                <div className="text-center">
-                  <Link
-                    to="/add-course"
-                    className="prim-btn cmsbtnPrim mb-4 me-3"
-                  >
-                    Add Courses
-                  </Link>
-                  <Link
-                    href="./purchasedCourses.php"
-                    className="prim-btn cmsbtnSec mb-4"
-                  >
-                    Courses Purchased
-                  </Link>
-                </div>
-              </div>
+              <h1 className="page-title fw-800 primFont mb-4">CMS</h1>
               <div className="box">
                 {/* User Management Starts */}
                 <div className="d-md-flex align-items-end flex-wrap justify-content-between mb-3 py-md-4 py-1">
@@ -64,10 +30,6 @@ const Courses = () => {
                       <form action="#">
                         <input
                           type="search"
-                          value={searchString}
-                          onChange={(e) => {
-                            setSearchString(e.target.value);
-                          }}
                           id="search-inp"
                           className="dashInput search-input w-100"
                           placeholder="Search...."
@@ -85,10 +47,6 @@ const Courses = () => {
                       <label className="mr-xl-2 mr-2">From:</label>
                       <input
                         type="date"
-                        value={from}
-                        onChange={(e) => {
-                          setFrom(e.target.value);
-                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -99,10 +57,6 @@ const Courses = () => {
                       <label className="mr-xl-2 mr-2">To:</label>
                       <input
                         type="date"
-                        value={to}
-                        onChange={(e) => {
-                          setTo(e.target.value);
-                        }}
                         placeholder="From"
                         className="primDateTime"
                       />
@@ -113,15 +67,10 @@ const Courses = () => {
                       <label className="mr-xl-2 mr-2 mb-3">
                         Service Status
                       </label>
-                      <select
-                        className="dashInput sm-dropdown mb-3"
-                        onChange={(e) => {
-                          setStatus(e.target.value);
-                        }}
-                      >
+                      <select className="dashInput sm-dropdown mb-3">
                         <option value="Status">Status</option>
-                        <option value="true">Active</option>
-                        <option value="false">InActive</option>
+                        <option value="Active">Active</option>
+                        <option value="InActive">InActive</option>
                       </select>
                     </div>
                   </div>
@@ -137,108 +86,68 @@ const Courses = () => {
                               <thead>
                                 <tr>
                                   <th>S.No.</th>
-                                  <th>Course Name</th>
-                                  <th>Amount</th>
+                                  <th>Page ID</th>
+                                  <th>Page Name</th>
                                   <th>Added On</th>
                                   <th>Status</th>
                                   <th>Action</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                {courses &&
-                                Object.keys(courses).length > 0 &&
-                                courses.docs.length > 0
-                                  ? courses.docs.map((item, index) => (
-                                      <tr className="tableRow">
-                                        <td>{index + 1}</td>
-                                        <td>{item?.courseName}</td>
-                                        <td>$ {item?.amount}</td>
-                                        <td>
-                                          {moment(item?.createdAt).format("ll")}
-                                        </td>
-                                        <td>
-                                          <div className="maindropdown">
-                                            <button
-                                              className={
-                                                item?.status
-                                                  ? "maindropbtn cGreen"
-                                                  : "maindropbtn text-danger"
-                                              }
-                                            >
-                                              {item?.status ? (
-                                                <>Active</>
-                                              ) : (
-                                                <>In-Active</>
-                                              )}
-                                              <i className="fas fa-caret-down ps-2" />
-                                            </button>
-                                            <div className="customDropdown-content">
-                                              <a
-                                                href="#"
-                                                type="button"
-                                                onClick={(e) => {
-                                                  dispatch(
-                                                    toggleActiveStatus(
-                                                      item?._id,
-                                                      searchString,
-                                                      status,
-                                                      from,
-                                                      to,
-                                                      page,
-                                                      perPage
-                                                    )
-                                                  );
-                                                  e.preventDefault();
-                                                }}
-                                                //data-bs-toggle="modal"
-                                                // data-bs-target={
-                                                //   item?.status
-                                                //     ? "#inactivateThis"
-                                                //     : "#activateThis"
-                                                // }
-                                              >
-                                                {item?.status ? (
-                                                  <>In-Active</>
-                                                ) : (
-                                                  <>Active</>
-                                                )}{" "}
-                                              </a>
-                                            </div>
-                                          </div>
-                                        </td>
-                                        <td>
-                                          <div className="btn-group">
-                                            <button
-                                              type="button"
-                                              className="btn transparent-btn ellipsis-btn"
-                                              data-bs-toggle="dropdown"
-                                              aria-haspopup="true"
-                                              aria-expanded="false"
-                                            >
-                                              {" "}
-                                              <i className="fa fa-ellipsis-v" />
-                                            </button>
-                                            <div className="dropdown-menu text-left custom-dropdown">
-                                              <Link
-                                                className="dropdown-item"
-                                                to={`/course-details/${item?._id}`}
-                                              >
-                                                <i className="far fa-eye" />
-                                                View
-                                              </Link>
-                                              <Link
-                                                className="dropdown-item"
-                                                to={`/edit-course/${item?._id}`}
-                                              >
-                                                <i className="fas fa-edit" />
-                                                Edit
-                                              </Link>
-                                            </div>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                    ))
-                                  : "No Courses"}
+                                <tr className="tableRow">
+                                  <td>01</td>
+                                  <td>001</td>
+                                  <td>ADCF</td>
+                                  <td>03/02/2020</td>
+                                  <td>
+                                    <div className="maindropdown">
+                                      <button className="maindropbtn cGreen">
+                                        Active
+                                        <i className="fas fa-caret-down ps-2" />
+                                      </button>
+                                      <div className="customDropdown-content">
+                                        <a
+                                          href="#"
+                                          type="button"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#inactivateThis"
+                                        >
+                                          In-Active
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div className="btn-group">
+                                      <button
+                                        type="button"
+                                        className="btn transparent-btn ellipsis-btn"
+                                        data-bs-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                      >
+                                        {" "}
+                                        <i className="fa fa-ellipsis-v" />
+                                      </button>
+                                      <div className="dropdown-menu text-left custom-dropdown">
+                                        <Link
+                                          className="dropdown-item"
+                                          to="/cms-details/:id"
+                                        >
+                                          <i className="far fa-eye" />
+                                          View
+                                        </Link>
+                                        <Link
+                                          className="dropdown-item"
+                                          to="/cms-edit/:id"
+                                        >
+                                          <i className="fas fa-edit" />
+                                          Edit
+                                        </Link>
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
                               </tbody>
                             </table>
                           </div>
@@ -248,23 +157,13 @@ const Courses = () => {
                   </div>
                 </div>
                 <div className="row align-items-center  my-md-3 p-md-3 p-2 m-2 table-responsive">
-                  {courses?.docs?.length > 0 && (
-                    <Pagination
-                      totalDocs={courses?.totalDocs}
-                      totalPages={courses?.totalPages}
-                      currentPage={courses?.page}
-                      setPage={setPage}
-                      hasNextPage={courses?.hasNextPage}
-                      hasPrevPage={courses?.hasPrevPage}
-                    />
-                  )}
-                  {/* <div className="col-lg-5 col-sm-12 col-md-12">
+                  <div className="col-lg-5 col-sm-12 col-md-12">
                     <h6 className="pagination-details">
                       {" "}
                       Showing 05 out of 40 records{" "}
                     </h6>
-                  </div> */}
-                  {/* <div className="col-lg-7 col-sm-12 col-md-12">
+                  </div>
+                  <div className="col-lg-7 col-sm-12 col-md-12">
                     <div
                       className="dataTables_paginate paging_simple_numbers"
                       id="DataTables_Table_0_paginate"
@@ -304,7 +203,7 @@ const Courses = () => {
                         </div>
                       </ul>
                     </div>
-                  </div> */}
+                  </div>
                 </div>
                 {/* User Management Ends */}
               </div>
@@ -333,7 +232,7 @@ const Courses = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="images/sure.png" alt="sure" />
+                <img src="../../images/sure.png" alt="sure" />
               </div>
               <div className="main-modal-msg">
                 <h4 className="section-heading fw-800 my-4">Inactivate</h4>
@@ -500,4 +399,4 @@ const Courses = () => {
   );
 };
 
-export default Courses;
+export default CmsLogs;

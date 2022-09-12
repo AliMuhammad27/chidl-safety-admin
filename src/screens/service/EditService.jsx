@@ -1,7 +1,71 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import Toasty from "util/toast";
+import moment from "moment";
+import ImageSelector from "components/ImageSelector";
+import { editService, getServiceDetails } from "redux/action/service";
+const EditService = ({ match }) => {
+  const serviceInfo = useSelector((state) => state?.service?.service?.service);
+  console.log("serviceInfo", serviceInfo);
+  useEffect(() => {
+    console.log("Running");
+    dispatch(getServiceDetails(match.params.id));
+  }, [match.params.id]);
+  const [serviceName, setservicename] = useState("");
+  const [about, setabout] = useState("");
+  const [amount, setamount] = useState("");
+  const [is_edit, setisedit] = useState(true);
+  const [image, setimage] = useState("");
+  const [availability, setavailability] = useState([
+    { scheduleDate: "", startTime: "", endTime: "" },
+  ]);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [searchParam, setSearchString] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [sort, setsort] = useState();
+  const dispatch = useDispatch();
+  const handleServiceChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...availability];
+    list[index][name] = value;
+    setavailability(list);
+  };
 
-const EditService = () => {
+  const handleServiceRemove = (index) => {
+    const list = [...availability];
+    list.splice(index, 1);
+    setavailability(list);
+  };
+
+  const handleServiceAdd = () => {
+    setavailability([
+      ...availability,
+      { scheduleDate: "", startTime: "", endTime: "" },
+    ]);
+  };
+  const formData = new FormData();
+  formData.append("serviceName", serviceName);
+  formData.append("about", about);
+  formData.append("amount", amount);
+  formData.append("reciepts", image);
+  formData.append("availability", JSON.stringify(availability));
+  // console.log(
+  //   "Availability",
+  //   new Date(availability[0].scheduleDate).toISOString().slice(0, 10)
+  // );
+  useEffect(() => {
+    if (serviceInfo) {
+      setservicename(serviceInfo?.serviceName);
+      setabout(serviceInfo?.about);
+      setamount(serviceInfo?.amount);
+      setimage(serviceInfo?.serviceImage);
+      setavailability(serviceInfo?.availability);
+    }
+  }, [serviceInfo]);
+  console.log("Availability", availability);
   return (
     <div className="app-content content dashboard">
       <div className="content-wrapper">
@@ -18,26 +82,11 @@ const EditService = () => {
               <form action="#">
                 <div className="row">
                   <div className="col-12">
-                    <div
-                      className="upload_div mb-5"
-                      onclick="document.getElementById('uploadImg').click()"
-                    >
-                      <div className="upload_div_content">
-                        <i className="fas fa-upload primColor" />
-                        <p className="cWhite">
-                          Upload Service Image
-                          <br /> OR <br />
-                          Drag an Image to Upload
-                        </p>
-                      </div>
-                      <img
-                        src="../../images/services.png"
-                        alt="image"
-                        className="img-fluid"
-                        onclick="document.getElementById('upload-store-img').click()"
-                      />
-                      <input type="file" className="d-none" id="uploadImg" />
-                    </div>
+                    <ImageSelector
+                      image={image}
+                      setImage={setimage}
+                      is_edit={is_edit}
+                    />
                   </div>
                   <div className="col-xl-6">
                     <div className="inp-wrap sec-inp-wrap mb-3">
@@ -50,6 +99,10 @@ const EditService = () => {
                       <input
                         id="ser_name"
                         type="text"
+                        value={serviceName}
+                        onChange={(e) => {
+                          setservicename(e.target.value);
+                        }}
                         placeholder="Service Name"
                         defaultValue="ADSFD"
                         className="auth-input passInput"
@@ -67,6 +120,10 @@ const EditService = () => {
                         <input
                           id="num"
                           type="number"
+                          value={amount}
+                          onChange={(e) => {
+                            setamount(e.target.value);
+                          }}
                           placeholder="Enter Amount"
                           defaultValue={100}
                           className="auth-input passInput"
@@ -80,18 +137,103 @@ const EditService = () => {
                       >
                         Availibility<span className="text-danger">*</span>
                       </label>
-                      <div className="d-lg-flex">
-                        <input className="inputDate my-3" type="date" />
-                        <input className="inputDate my-3" type="date" />
-                        <input className="inputDate my-3" type="date" />
+                      <div>
+                        <form className="App" autoComplete="off">
+                          <div className="form-field">
+                            {availability.map((singleService, index) => (
+                              <div key={index} className="services">
+                                <div className="first-division">
+                                  <input
+                                    name="scheduleDate"
+                                    type="date"
+                                    id="scheduleDate"
+                                    value={moment(
+                                      singleService.scheduleDate
+                                    ).format("YYYY-MM-DD")}
+                                    onChange={(e) =>
+                                      handleServiceChange(e, index)
+                                    }
+                                    required
+                                  />
+                                  <input
+                                    name="startTime"
+                                    type="time"
+                                    id="startTime"
+                                    value={singleService.startTime}
+                                    onChange={(e) =>
+                                      handleServiceChange(e, index)
+                                    }
+                                    required
+                                  />
+                                  <input
+                                    name="endTime"
+                                    type="time"
+                                    id="endTime"
+                                    value={singleService.endTime}
+                                    onChange={(e) =>
+                                      handleServiceChange(e, index)
+                                    }
+                                    required
+                                  />
+                                  {availability.length - 1 === index &&
+                                    availability.length < 4 && (
+                                      <button
+                                        type="button"
+                                        onClick={handleServiceAdd}
+                                        className="add-btn"
+                                      >
+                                        <i
+                                          class="fa fa-plus"
+                                          aria-hidden="true"
+                                        ></i>
+                                      </button>
+                                    )}
+                                </div>
+                                <div className="second-division">
+                                  {availability.length !== 1 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleServiceRemove(index)}
+                                      className="remove-btn"
+                                    >
+                                      <i
+                                        class="fa fa-trash"
+                                        aria-hidden="true"
+                                      ></i>
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          {/* <div className="output">
+                            <h2>Output</h2>
+                            {availability &&
+                              availability.map((singleService, index) => (
+                                <ul key={index}>
+                                  {singleService.service && (
+                                    <li>{singleService.service}</li>
+                                  )}
+                                </ul>
+                              ))}
+                          </div> */}
+                        </form>
+                        {/* <button className="notBtn primColor">
+                          <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button> */}
                       </div>
-                      <div className="text-end">
+                      {/* <div className="d-lg-flex">
+                        <input className="inputDate my-3" type="date" />
+                        <input className="inputDate my-3" type="date" />
+                        <input className="inputDate my-3" type="date" />
+                      </div> */}
+                      {/* <div className="text-end">
                         <button className="notBtn primColor">
                           <u>Add More Field</u>
                         </button>
-                      </div>
+                      </div> */}
                     </div>
-                    <div className="inp-wrap sec-inp-wrap mb-3">
+                    {/* <div className="inp-wrap sec-inp-wrap mb-3">
                       <label
                         htmlFor="availibility"
                         className="d-block primLable my-2 px-md-3 px-1"
@@ -108,7 +250,7 @@ const EditService = () => {
                           <u>Delete</u>
                         </button>
                       </div>
-                    </div>
+                    </div> */}
                     <div className="inp-wrap sec-inp-wrap mb-3">
                       <label
                         htmlFor="text_area"
@@ -119,13 +261,25 @@ const EditService = () => {
                       <textarea
                         name
                         id="text_area"
+                        value={about}
+                        onChange={(e) => {
+                          setabout(e.target.value);
+                        }}
                         rows={5}
                         className="w-100"
                         placeholder="ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. "
                         defaultValue={""}
                       />
                     </div>
-                    <button className="prim-btn cmsbtnPrim">Update</button>
+                    <button
+                      className="prim-btn cmsbtnPrim"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        dispatch(editService(formData, match.params.id));
+                      }}
+                    >
+                      Update
+                    </button>
                   </div>
                 </div>
               </form>

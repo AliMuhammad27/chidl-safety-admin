@@ -16,7 +16,6 @@ export const updateProfile = (formData, history) => async (dispatch) => {
       payload: res.data,
     });
     dispatch(loadAdmin());
-    history.push("/profile");
     Success("Profile Updated Succesfully", "Updated");
   } catch (err) {
     dispatch({

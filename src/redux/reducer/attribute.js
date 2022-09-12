@@ -4,6 +4,11 @@ import {
   GET_ALL_ATTRIBUTES,
   GET_ATTRIBUTES,
   GET_ATTRIBUTES_ERROR,
+  EDIT_ATTRIBUTE,
+  EDIT_ATTRIBUTE_ERROR,
+  EDIT_PRODUCT_ERROR,
+  GET_ATTRIBUTE,
+  GET_ATTRIBUTE_ERROR,
 } from "redux/action/actionTypes";
 const initialState = {
   attributes: null,
@@ -22,6 +27,18 @@ const attributeReducer = (state = initialState, action) => {
         attributeAdded: payload,
         isLoading: false,
       };
+    case GET_ATTRIBUTE:
+      return {
+        ...state,
+        attribute: payload,
+        isLoading: false,
+      };
+    case EDIT_ATTRIBUTE:
+      return {
+        ...state,
+        attributeEdited: payload,
+        isLoading: false,
+      };
     case GET_ATTRIBUTES:
       return {
         ...state,
@@ -36,6 +53,8 @@ const attributeReducer = (state = initialState, action) => {
       };
     case ADD_ATTRIBUTE_ERROR:
     case GET_ATTRIBUTES_ERROR:
+    case EDIT_PRODUCT_ERROR:
+    case GET_ATTRIBUTE_ERROR:
       return {
         ...state,
         categories: null,

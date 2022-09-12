@@ -5,6 +5,8 @@ import {
   GET_SERVICES_ERROR,
   GET_SERVICE_DETAILS,
   GET_SERVICE_DETAILS_ERROR,
+  EDIT_SERVICE,
+  EDIT_SERVICE_ERROR,
 } from "redux/action/actionTypes";
 const initialState = {
   services: null,
@@ -23,6 +25,12 @@ const serviceReducer = (state = initialState, action) => {
         serviceAdded: payload,
         isLoading: false,
       };
+    case EDIT_SERVICE:
+      return {
+        ...state,
+        serviceEdited: payload,
+        isLoading: false,
+      };
     case GET_SERVICES:
       return {
         ...state,
@@ -38,6 +46,7 @@ const serviceReducer = (state = initialState, action) => {
     case ADD_SERVICE_ERROR:
     case GET_SERVICES_ERROR:
     case GET_SERVICE_DETAILS_ERROR:
+    case EDIT_SERVICE_ERROR:
       return {
         ...state,
         services: null,

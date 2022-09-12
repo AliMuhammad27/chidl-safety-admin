@@ -5,12 +5,28 @@ import {
   GET_COURSES_ERROR,
   GET_COURSE_DETAILS,
   GET_COURSE_DETAILS_ERROR,
-  TOGGLE_ACTIVE_ERROR,
-  TOGGLE_ACTIVE,
 } from "./actionTypes";
 import api from "util/api";
 import Success from "components/modals/Modal.Success";
 export const addCourse = (formData, history) => async (dispatch) => {
+  try {
+    const res = await api.post(`/course/createCourse`, formData);
+    console.log("Res", res.data);
+    dispatch({
+      type: ADD_COURSE,
+      payload: res.data,
+    });
+    Success("Course Added Succesfully", "Added");
+    history.push("/courses");
+  } catch (err) {
+    console.log("Err", err);
+    dispatch({
+      type: ADD_COURSE_ERROR,
+    });
+  }
+};
+
+export const editCourse = (formData, history) => async (dispatch) => {
   try {
     const res = await api.post(`/course/createCourse`, formData);
     console.log("Res", res.data);

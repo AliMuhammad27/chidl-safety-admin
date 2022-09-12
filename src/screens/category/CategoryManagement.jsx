@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useWindowTitle from "screens/hooks/UseWindowTitle";
 import Pagination from "components/Pagination";
+import { closeModals } from "util/closeModal";
 import {
   addCategory,
   getAllCategories,
@@ -15,7 +16,7 @@ const CategoryManagement = () => {
   const dispatch = useDispatch();
   useWindowTitle("category-management");
   const [categoryName, setcategoryname] = useState("");
-  const [statuss, setstatuss] = useState("");
+  const [statuss, setstatuss] = useState(true);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchString, setSearchString] = useState("");
@@ -31,7 +32,16 @@ const CategoryManagement = () => {
     (state) => state.category?.categories?.category
   );
   console.log("Fetched Categories", categories);
-  console.log("status is changing", status);
+  console.log("id is setting", id);
+  const categoryInfo = useSelector(
+    (state) => state?.category?.category?.category
+  );
+  console.log("categoryInfo", categoryInfo);
+  useEffect(() => {
+    if (id) {
+      dispatch(getCategoryDetails(id));
+    }
+  }, [id]);
   return (
     <div>
       <div className="app-content content dashboard">
@@ -184,25 +194,14 @@ const CategoryManagement = () => {
                                                 href="#"
                                                 type="button"
                                                 onClick={(e) => {
-                                                  dispatch(
-                                                    toggleActiveStatus(
-                                                      item?._id,
-                                                      searchString,
-                                                      status,
-                                                      from,
-                                                      to,
-                                                      page,
-                                                      perPage
-                                                    )
-                                                  );
-                                                  e.preventDefault();
+                                                  setid(item?._id);
                                                 }}
-                                                //data-bs-toggle="modal"
-                                                // data-bs-target={
-                                                //   item?.status
-                                                //     ? "#inactivateThis"
-                                                //     : "#activateThis"
-                                                // }
+                                                data-bs-toggle="modal"
+                                                data-bs-target={
+                                                  item?.status
+                                                    ? "#inactivateThis"
+                                                    : "#activateThis"
+                                                }
                                               >
                                                 {item?.status ? (
                                                   <>In-Active</>
@@ -232,6 +231,13 @@ const CategoryManagement = () => {
                                                 type="button"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#categoryDetails"
+                                                onClick={(e) => {
+                                                  setid(item?._id);
+                                                  setcategoryname(
+                                                    item?.categoryName
+                                                  );
+                                                  setstatuss(item?.status);
+                                                }}
                                               >
                                                 <i className="far fa-eye" />
                                                 View
@@ -242,16 +248,16 @@ const CategoryManagement = () => {
                                                 data-bs-toggle="modal"
                                                 type="button"
                                                 data-bs-target="#edit_Category"
+                                                onClick={(e) => {
+                                                  setid(item?._id);
+                                                  setcategoryname(
+                                                    item?.categoryName
+                                                  );
+                                                  setstatuss(item?.status);
+                                                }}
                                               >
                                                 <i className="fas fa-edit" />
                                                 Edit
-                                              </a>
-                                              <a
-                                                className="dropdown-item"
-                                                href="#"
-                                              >
-                                                <i className="fas fa-trash" />
-                                                Delete
                                               </a>
                                             </div>
                                           </div>
@@ -353,7 +359,11 @@ const CategoryManagement = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/sure.png" alt="sure" />
+                <img
+                  src="
+                images/sure.png"
+                  alt="sure"
+                />
               </div>
               <div className="main-modal-msg">
                 <h4 className="section-heading fw-800 my-4">Inactivate</h4>
@@ -368,6 +378,20 @@ const CategoryManagement = () => {
                   data-bs-toggle="modal"
                   data-bs-target="#inactivateConfirmation"
                   data-bs-dismiss="modal"
+                  onClick={(e) => {
+                    dispatch(
+                      toggleActiveStatus(
+                        id,
+                        searchString,
+                        status,
+                        from,
+                        to,
+                        page,
+                        perPage
+                      )
+                    );
+                    e.preventDefault();
+                  }}
                 >
                   Yes
                 </button>
@@ -403,7 +427,11 @@ const CategoryManagement = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/check.png" alt="check" />
+                <img
+                  src="
+                images/check.png"
+                  alt="check"
+                />
               </div>
               <div className="main-modal-msg my-2">
                 <h4 className="section-heading fw-800 my-4">Inactivate</h4>
@@ -445,7 +473,7 @@ const CategoryManagement = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/sure.png" alt="sure" />
+                <img src="images/sure.png" alt="sure" />
               </div>
               <div className="main-modal-msg">
                 <h4 className="section-heading fw-800 my-4">Activate</h4>
@@ -460,6 +488,20 @@ const CategoryManagement = () => {
                   data-bs-toggle="modal"
                   data-bs-target="#activateConfirmation"
                   data-bs-dismiss="modal"
+                  onClick={(e) => {
+                    dispatch(
+                      toggleActiveStatus(
+                        id,
+                        searchString,
+                        status,
+                        from,
+                        to,
+                        page,
+                        perPage
+                      )
+                    );
+                    e.preventDefault();
+                  }}
                 >
                   Yes
                 </button>
@@ -495,7 +537,7 @@ const CategoryManagement = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/check.png" alt="check" />
+                <img src="images/check.png" alt="check" />
               </div>
               <div className="main-modal-msg my-2">
                 <h4 className="section-heading fw-800">Activate</h4>
@@ -544,13 +586,13 @@ const CategoryManagement = () => {
                       <label htmlFor className="mb-1">
                         Category Name
                       </label>
-                      <p>ASASDFD</p>
+                      <p>{categoryName}</p>
                     </div>
                     <div className="primContentWrap mb-2 d-md-flex text-start">
                       <label htmlFor className="mb-1">
                         Status
                       </label>
-                      <p>Active</p>
+                      {statuss ? <p>Active</p> : <p>In-Active</p>}
                     </div>
                     <div className="primContentWrap mb-2 d-md-flex text-start">
                       <label htmlFor className="mb-1">
@@ -626,6 +668,7 @@ const CategoryManagement = () => {
                   </label>
                   <select
                     className="modal-select"
+                    value={statuss}
                     onChange={(e) => {
                       setstatuss(e.target.value);
                     }}
@@ -703,7 +746,10 @@ const CategoryManagement = () => {
                     id="ser_name"
                     type="text"
                     placeholder="Enter Category Name"
-                    defaultValue="ASASDFD"
+                    value={categoryName}
+                    onChange={(e) => {
+                      setcategoryname(e.target.value);
+                    }}
                     className="auth-input passInput mx-0"
                   />
                 </div>
@@ -714,16 +760,40 @@ const CategoryManagement = () => {
                   >
                     Category Status<span className="text-danger">*</span>
                   </label>
-                  <select className="modal-select">
-                    <option value>Select Status</option>
-                    <option value="Active" selected>
-                      Active
-                    </option>
-                    <option value="InActive">InActive</option>
-                  </select>
+                  <div className="col-xxl-8 text-lg-end text-start">
+                    <div className="align-items-center d-md-flex filter-wrap w-100 mb-3 justify-content-end">
+                      <select
+                        className="dashInput sm-dropdown mb-3"
+                        value={statuss}
+                        onChange={(e) => {
+                          setstatuss(e.target.value);
+                        }}
+                      >
+                        <option value="Status">Status</option>
+                        <option value="true">Active</option>
+                        <option value="false">InActive</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
                 <div className="modal-footer">
                   <button
+                    onClick={(e) => {
+                      dispatch(
+                        editCategory(
+                          id,
+                          categoryName,
+                          statuss,
+                          searchString,
+                          status,
+                          from,
+                          to,
+                          page,
+                          perPage
+                        )
+                      );
+                      closeModals();
+                    }}
                     type="button"
                     className="prim-btn cmsbtnPrim my-1"
                     data-bs-dismiss="modal"

@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addAttribute, getAllAttributes } from "redux/action/attribute";
+import {
+  addAttribute,
+  getAllAttributes,
+  toggleActiveStatus,
+  getAttributeDetails,
+  editAttribute,
+} from "redux/action/attribute";
 import Pagination from "components/Pagination";
 import Toasty from "util/toast";
+import { closeModals } from "util/closeModal";
 const AttributeManagement = ({ history }) => {
   const dispatch = useDispatch();
   const [attributeName, setattributename] = useState("");
   const [attributeValue, setattributevalue] = useState("");
   const [attributeType, setattributetype] = useState("");
-  const [statuss, setstatus] = useState(true);
+  const [statuss, setstatuss] = useState(true);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchString, setSearchString] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [id, setid] = useState("");
   const [status, setStatus] = useState("");
   useEffect(() => {
     console.log("Fetching Attributes");
@@ -23,6 +31,15 @@ const AttributeManagement = ({ history }) => {
     (state) => state.attribute?.attributes?.attribute
   );
   console.log("Fetched Attributes", attributes);
+  const attributeInfo = useSelector(
+    (state) => state?.attribute?.attribute?.attribute
+  );
+  console.log("attributeInfo", attributeInfo);
+  useEffect(() => {
+    if (id) {
+      dispatch(getAttributeDetails(id));
+    }
+  }, [id]);
   return (
     <div>
       <div className="app-content content dashboard">
@@ -154,18 +171,39 @@ const AttributeManagement = ({ history }) => {
                                         <td>03/02/2020</td>
                                         <td>
                                           <div className="maindropdown">
-                                            <button className="maindropbtn cGreen">
-                                              Active
+                                            <button
+                                              className={
+                                                item?.status
+                                                  ? "maindropbtn cGreen"
+                                                  : "maindropbtn text-danger"
+                                              }
+                                            >
+                                              {item?.status ? (
+                                                <>Active</>
+                                              ) : (
+                                                <>In-Active</>
+                                              )}
                                               <i className="fas fa-caret-down ps-2" />
                                             </button>
                                             <div className="customDropdown-content">
                                               <a
                                                 href="#"
                                                 type="button"
+                                                onClick={(e) => {
+                                                  setid(item?._id);
+                                                }}
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#inactivateThis"
+                                                data-bs-target={
+                                                  item?.status
+                                                    ? "#inactivateThis"
+                                                    : "#activateThis"
+                                                }
                                               >
-                                                In-Active
+                                                {item?.status ? (
+                                                  <>In-Active</>
+                                                ) : (
+                                                  <>Active</>
+                                                )}{" "}
                                               </a>
                                             </div>
                                           </div>
@@ -188,6 +226,19 @@ const AttributeManagement = ({ history }) => {
                                                 href="#"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#attributeDetails"
+                                                onClick={(e) => {
+                                                  setid(item?._id);
+                                                  setattributename(
+                                                    item?.attributeName
+                                                  );
+                                                  setattributevalue(
+                                                    item?.attributeValue
+                                                  );
+                                                  setattributetype(
+                                                    item?.attributeType
+                                                  );
+                                                  setstatuss(item?.status);
+                                                }}
                                               >
                                                 <i className="far fa-eye" />
                                                 View
@@ -198,6 +249,19 @@ const AttributeManagement = ({ history }) => {
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#editAttributeDetails "
                                                 type="button"
+                                                onClick={(e) => {
+                                                  setid(item?._id);
+                                                  setattributename(
+                                                    item?.attributeName
+                                                  );
+                                                  setattributevalue(
+                                                    item?.attributeValue
+                                                  );
+                                                  setattributetype(
+                                                    item?.attributeType
+                                                  );
+                                                  setstatuss(item?.status);
+                                                }}
                                               >
                                                 <i className="fas fa-edit" />
                                                 Edit
@@ -311,25 +375,25 @@ const AttributeManagement = ({ history }) => {
                       <label htmlFor className="mb-1 text-start">
                         Atribute Name
                       </label>
-                      <p>Colour</p>
+                      <p>{attributeName}</p>
                     </div>
                     <div className="primContentWrap mb-2 d-md-flex justify-content-start">
                       <label htmlFor className="mb-1 text-start">
                         Atribute Value
                       </label>
-                      <p>Blue , Black</p>
+                      <p>{attributeValue}</p>
                     </div>
                     <div className="primContentWrap mb-2 d-md-flex justify-content-start">
                       <label htmlFor className="mb-1 text-start">
                         Atribute Type
                       </label>
-                      <p>Dropbox</p>
+                      <p>{attributeType}</p>
                     </div>
                     <div className="primContentWrap mb-2 d-md-flex justify-content-start">
                       <label htmlFor className="mb-1 text-start">
                         Status
                       </label>
-                      <p>Active</p>
+                      {statuss ? <p>Active</p> : <p>In-Active</p>}
                     </div>
                   </div>
                 </div>
@@ -414,11 +478,6 @@ const AttributeManagement = ({ history }) => {
                           }}
                         />
                       </div>
-                      <div className="text-end mb-2">
-                        <button className="notBtn primColor">
-                          <u>Add More Field</u>
-                        </button>
-                      </div>
                       <div className="modal-select-sec mb-4">
                         <label
                           htmlFor="prod_name"
@@ -448,7 +507,7 @@ const AttributeManagement = ({ history }) => {
                         <select
                           className="dashInput sm-dropdown"
                           onChange={(e) => {
-                            setstatus(e.target.value);
+                            setstatuss(e.target.value);
                           }}
                         >
                           <option value>Select Status</option>
@@ -535,6 +594,10 @@ const AttributeManagement = ({ history }) => {
                         </label>
                         <input
                           id="course_name"
+                          value={attributeName}
+                          onChange={(e) => {
+                            setattributename(e.target.value);
+                          }}
                           defaultValue="Enter Option A"
                           type="text"
                           placeholder="Enter Atribute Name"
@@ -550,36 +613,13 @@ const AttributeManagement = ({ history }) => {
                         </label>
                         <input
                           id="course_name"
+                          value={attributeValue}
                           defaultValue="Enter Option A"
+                          onChange={(e) => setattributevalue(e.target.value)}
                           type="text"
                           placeholder="Enter Atribute Value"
                           className="auth-input passInput"
                         />
-                        <div className="text-end mb-2">
-                          <button className="notBtn primColor">
-                            <u>Add More Field</u>
-                          </button>
-                        </div>
-                      </div>
-                      <div className="inp-wrap sec-inp-wrap w-100 mb-4">
-                        <label
-                          htmlFor="prod_name"
-                          className="d-block primLable my-2 px-md-3 px-1 text-start"
-                        >
-                          Atribute Value<span className="text-danger">*</span>
-                        </label>
-                        <input
-                          id="course_name"
-                          defaultValue="Enter Option A"
-                          type="text"
-                          placeholder="Enter Atribute Value"
-                          className="auth-input passInput"
-                        />
-                        <div className="text-end mb-2">
-                          <button className="notBtn text-danger">
-                            <u>Delete</u>
-                          </button>
-                        </div>
                       </div>
                       <div className="modal-select-sec mb-4">
                         <label
@@ -588,13 +628,19 @@ const AttributeManagement = ({ history }) => {
                         >
                           Atribute Type<span className="text-danger">*</span>
                         </label>
-                        <select className="dashInput sm-dropdown">
-                          <option value="Select Value">Select Value</option>
-                          <option value="Dropbox" selected>
-                            Dropbox
-                          </option>
-                          <option>02</option>
-                        </select>
+                        <div className="modal-select-sec mb-4">
+                          <select
+                            className="dashInput sm-dropdown"
+                            onChange={(e) => {
+                              setattributetype(e.target.value);
+                            }}
+                          >
+                            <option value="Select Value">Select Value</option>
+                            <option value="Brown">Brown</option>
+                            <option value="Black">Black</option>
+                            <option value="Black">Purple</option>
+                          </select>
+                        </div>
                       </div>
                       <div className="modal-select-sec mb-4">
                         <label
@@ -613,6 +659,24 @@ const AttributeManagement = ({ history }) => {
                 </div>
                 <div className="modal-footer">
                   <button
+                    onClick={(e) => {
+                      dispatch(
+                        editAttribute(
+                          id,
+                          attributeName,
+                          attributeValue,
+                          attributeType,
+                          statuss,
+                          searchString,
+                          status,
+                          from,
+                          to,
+                          page,
+                          perPage
+                        )
+                      );
+                      closeModals();
+                    }}
                     className="prim-btn cmsbtnPrim my-1 mb-2"
                     type="button"
                     data-bs-dismiss="modal"
@@ -646,7 +710,7 @@ const AttributeManagement = ({ history }) => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/sure.png" alt="sure" />
+                <img src="images/sure.png" alt="sure" />
               </div>
               <div className="main-modal-msg">
                 <h4 className="section-heading fw-800 my-4">Inactivate</h4>
@@ -661,6 +725,20 @@ const AttributeManagement = ({ history }) => {
                   data-bs-toggle="modal"
                   data-bs-target="#inactivateConfirmation"
                   data-bs-dismiss="modal"
+                  onClick={(e) => {
+                    dispatch(
+                      toggleActiveStatus(
+                        id,
+                        searchString,
+                        status,
+                        from,
+                        to,
+                        page,
+                        perPage
+                      )
+                    );
+                    e.preventDefault();
+                  }}
                 >
                   Yes
                 </button>
@@ -696,7 +774,7 @@ const AttributeManagement = ({ history }) => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/check.png" alt="check" />
+                <img src="images/check.png" alt="check" />
               </div>
               <div className="main-modal-msg my-2">
                 <h4 className="section-heading fw-800 my-4">Inactivate</h4>
@@ -738,7 +816,7 @@ const AttributeManagement = ({ history }) => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/sure.png" alt="sure" />
+                <img src="images/sure.png" alt="sure" />
               </div>
               <div className="main-modal-msg">
                 <h4 className="section-heading fw-800 my-4">Activate</h4>
@@ -753,6 +831,20 @@ const AttributeManagement = ({ history }) => {
                   data-bs-toggle="modal"
                   data-bs-target="#activateConfirmation"
                   data-bs-dismiss="modal"
+                  onClick={(e) => {
+                    dispatch(
+                      toggleActiveStatus(
+                        id,
+                        searchString,
+                        status,
+                        from,
+                        to,
+                        page,
+                        perPage
+                      )
+                    );
+                    e.preventDefault();
+                  }}
                 >
                   Yes
                 </button>
@@ -788,7 +880,7 @@ const AttributeManagement = ({ history }) => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/check.png" alt="check" />
+                <img src="images/check.png" alt="check" />
               </div>
               <div className="main-modal-msg my-2">
                 <h4 className="section-heading fw-800">Activate</h4>

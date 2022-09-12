@@ -44,7 +44,7 @@ export const editProduct =
         type: EDIT_PRODUCT,
         payload: res.data,
       });
-      Success("Product Added Successfully", "Added");
+      Success("Product Edited Successfully", "Added");
       history.push("/products");
       dispatch(getAllProducts(searchParam, status, from, to, page, perPage));
     } catch (err) {

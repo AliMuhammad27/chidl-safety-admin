@@ -36,6 +36,9 @@ import SideBar from "layout/SideBar";
 import Profile from "screens/profile/Profile";
 import EditProfile from "screens/profile/EditProfile";
 import Notifications from "screens/profile/Notifications";
+import CmsLogs from "screens/cms/CmsLogs";
+import CmsDetails from "screens/cms/CmsDetails";
+import EditCms from "screens/cms/EditCms";
 import { setAuthToken } from "util/setAuthToken";
 import { Provider } from "react-redux";
 import store from "redux/store/store";
@@ -116,6 +119,9 @@ export default function App() {
         <PrivateRoute path="/quiz" component={Quiz} exact />
         <PrivateRoute path="/edit-quiz/:id" component={EditQuiz} exact />
         <PrivateRoute path="/feedbacks" component={Feedbacks} exact />
+        <PrivateRoute path="/cms-logs" component={CmsLogs} exact />
+        <PrivateRoute path="/cms-details/:id" component={CmsDetails} exact />
+        <PrivateRoute path="/cms-edit/:id" component={EditCms} exact />
       </Router>
     </Provider>
   );

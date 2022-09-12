@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoires } from "redux/action/category";
 import { getAttributes } from "redux/action/attribute";
+import { editProduct } from "redux/action/product";
 import { getProductDetails } from "redux/action/product";
-
+import ImageSelectDropzone from "components/ImageSelectDropzone";
+import ImageSlider from "components/ImageSlider";
 const EditProduct = ({ match, history }) => {
   const productInfo = useSelector((state) => state?.product?.product?.product);
   const dispatch = useDispatch();
@@ -25,11 +27,13 @@ const EditProduct = ({ match, history }) => {
   const [to, setTo] = useState("");
   const [sort, setsort] = useState();
   const [status, setStatus] = useState("");
+  const [images, setImages] = useState([]);
   const [category, setcategory] = useState("");
   const [attribute, setattribute] = useState("");
   const [price, setprice] = useState("");
   const [instock, setinstock] = useState("");
   const [edit, setIsEdit] = useState(false);
+  const [hover, sethover] = useState(false);
   const [description, setdescription] = useState("");
   const [usage, setusage] = useState("");
   const [productImage, setProductImage] = useState([]);
@@ -61,8 +65,30 @@ const EditProduct = ({ match, history }) => {
       setinstock(productInfo?.instock);
       setdescription(productInfo?.description);
       setusage(productInfo?.usage);
+      setcategory(productInfo?.category);
+      setattribute(productInfo?.attribute);
+      setImages(productInfo?.productImage);
     }
   }, [productInfo]);
+
+  //for deleting
+  const handleMouseEnter = () => {
+    sethover(true);
+  };
+
+  const handleMouseLeave = () => {
+    sethover(false);
+  };
+
+  const handleDeleteImage = (index) => {
+    const temp_data = [...images];
+
+    temp_data.splice(index, 1);
+
+    console.log("tempdata", temp_data);
+
+    setImages(temp_data);
+  };
   return (
     <div className="app-content content dashboard">
       <div className="content-wrapper">
@@ -79,156 +105,38 @@ const EditProduct = ({ match, history }) => {
             <div className="box custom_box">
               <form action="#">
                 <div className="row">
-                  <div className="col-xxl-5">
-                    <div
-                      className="upload_div mb-5"
-                      onclick="document.getElementById('uploadImg').click()"
-                    >
-                      <div className="upload_div_content">
-                        <i className="fas fa-upload cWhite" />
-                        <p className="cWhite">Upload Main Product Image</p>
+                  <div className="col-xxl-6">
+                    {
+                      <div className="product_slider  my-3">
+                        <div className="slider slider-for">
+                          <ImageSlider
+                            images={images}
+                            enable_delete={true}
+                            handleMouseEnter={handleMouseEnter}
+                            handleMouseLeave={handleMouseLeave}
+                            hover={hover}
+                            handleDeleteImage={handleDeleteImage}
+                          />
+                        </div>
                       </div>
-                      <img
-                        src="../../images/services.png"
-                        alt="image"
-                        className="img-fluid"
-                        onclick="document.getElementById('upload-store-img').click()"
+                    }
+                    <div className="upload_div mb-5">
+                      <ImageSelectDropzone
+                        max={5}
+                        setproductimage={setProductImage}
+                        files={data?.project_images}
+                        setFiles={(project_images) =>
+                          setData({ ...data, project_images })
+                        }
+                        accept="image/*"
                       />
-                      <input type="file" className="d-none" id="uploadImg" />
                     </div>
+                    <p className="primary-text pt-2 pl-2 text-danger">
+                      Please note that you can upload up to {5 - images.length}{" "}
+                      images only
+                    </p>
                   </div>
-                  <div className="col-xxl-7">
-                    <div className="row">
-                      <div className="col-xxl-3 col-xl-4 col-md-6">
-                        <div className="mb-3">
-                          <div
-                            className="upload_div mx-md-3"
-                            onclick="document.getElementById('uploadImg2').click()"
-                          >
-                            <div className="upload_div_content">
-                              <i className="fas fa-upload primColor" />
-                              <p className="primColor mt-2">
-                                {" "}
-                                <u>Upload Image</u>{" "}
-                              </p>
-                            </div>
-                            <img
-                              src="../../images/storeImg2.png"
-                              alt="image"
-                              className="img-fluid"
-                              onclick="document.getElementById('upload-store-img').click()"
-                            />
-                            <input
-                              type="file"
-                              className="d-none"
-                              id="uploadImg2"
-                            />
-                          </div>
-                          <div className="text-end mt-2">
-                            <button className="text-danger notBtn">
-                              <u>Delete</u>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-xxl-3 col-xl-4 col-md-6">
-                        <div className="mb-3">
-                          <div
-                            className="upload_div mx-md-3"
-                            onclick="document.getElementById('uploadImg2').click()"
-                          >
-                            <div className="upload_div_content">
-                              <i className="fas fa-upload primColor" />
-                              <p className="primColor mt-2">
-                                {" "}
-                                <u>Upload Image</u>{" "}
-                              </p>
-                            </div>
-                            <img
-                              src="../../images/storeImg2.png"
-                              alt="image"
-                              className="img-fluid"
-                              onclick="document.getElementById('upload-store-img').click()"
-                            />
-                            <input
-                              type="file"
-                              className="d-none"
-                              id="uploadImg2"
-                            />
-                          </div>
-                          <div className="text-end mt-2">
-                            <button className="text-danger notBtn">
-                              <u>Delete</u>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-xxl-3 col-xl-4 col-md-6">
-                        <div className="mb-3">
-                          <div
-                            className="upload_div mx-md-3"
-                            onclick="document.getElementById('uploadImg2').click()"
-                          >
-                            <div className="upload_div_content">
-                              <i className="fas fa-upload primColor" />
-                              <p className="primColor mt-2">
-                                {" "}
-                                <u>Upload Image</u>{" "}
-                              </p>
-                            </div>
-                            <img
-                              src="../../images/storeImg2.png"
-                              alt="image"
-                              className="img-fluid"
-                              onclick="document.getElementById('upload-store-img').click()"
-                            />
-                            <input
-                              type="file"
-                              className="d-none"
-                              id="uploadImg2"
-                            />
-                          </div>
-                          <div className="text-end mt-2">
-                            <button className="text-danger notBtn">
-                              <u>Delete</u>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-xxl-3 col-xl-4 col-md-6">
-                        <div className="mb-3">
-                          <div
-                            className="upload_div mx-md-3"
-                            onclick="document.getElementById('uploadImg2').click()"
-                          >
-                            <div className="upload_div_content">
-                              <i className="fas fa-upload primColor" />
-                              <p className="primColor mt-2">
-                                {" "}
-                                <u>Upload Image</u>{" "}
-                              </p>
-                            </div>
-                            <img
-                              src="../../images/storeImg2.png"
-                              alt="image"
-                              className="img-fluid"
-                              onclick="document.getElementById('upload-store-img').click()"
-                            />
-                            <input
-                              type="file"
-                              className="d-none"
-                              id="uploadImg2"
-                            />
-                          </div>
-                          <div className="text-end mt-2">
-                            <button className="text-danger notBtn">
-                              <u>Delete</u>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+
                   <div className="col-xl-6">
                     <div className="inp-wrap sec-inp-wrap mb-4">
                       <label
@@ -298,13 +206,19 @@ const EditProduct = ({ match, history }) => {
                           Category<span className="text-danger">*</span>
                         </label>
                         <select
-                          name="states[]"
-                          className="js-example-placeholder-multiple js-states form-control  mx-0 w-100"
-                          id="category_select"
-                          multiple="multiple"
+                          id
+                          className="dashInput sm-dropdown mb-3"
+                          value={category}
+                          onChange={(e) => setcategory(e.target.value)}
                         >
-                          <option value="Category A">Category A</option>
-                          <option value="Category B">Category B</option>
+                          {/* <option value>{category}</option> */}
+                          {cats && cats.length > 0
+                            ? cats?.map((item, index) => (
+                                <option value={item?._id} key={item?._id}>
+                                  {item?.categoryName}
+                                </option>
+                              ))
+                            : ""}
                         </select>
                       </div>
                     </div>
@@ -317,13 +231,19 @@ const EditProduct = ({ match, history }) => {
                           Attribute<span className="text-danger">*</span>
                         </label>
                         <select
-                          name="states[]"
-                          id="attribute_select"
-                          className="js-example-placeholder-multiple2 js-states form-control  mx-0 w-100"
-                          multiple="multiple"
+                          id
+                          className="dashInput sm-dropdown mb-3"
+                          value={attribute}
+                          onChange={(e) => setattribute(e.target.value)}
                         >
-                          <option value="Attribute A">Attribute A</option>
-                          <option value="Category B">Attribute B </option>
+                          {/* <option value>{category}</option> */}
+                          {atts && atts.length > 0
+                            ? atts?.map((item, index) => (
+                                <option value={item?._id} key={item?._id}>
+                                  {item?.attributeName}
+                                </option>
+                              ))
+                            : ""}
                         </select>
                       </div>
                     </div>
@@ -346,7 +266,15 @@ const EditProduct = ({ match, history }) => {
                         className="auth-input mx-0"
                       />
                     </div>
-                    <button className="prim-btn cmsbtnPrim">Update</button>
+                    <button
+                      className="prim-btn cmsbtnPrim"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        dispatch(editProduct(formData, match.params.id));
+                      }}
+                    >
+                      Update
+                    </button>
                   </div>
                 </div>
               </form>

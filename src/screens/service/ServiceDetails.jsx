@@ -62,10 +62,13 @@ const ServiceDetails = ({ match }) => {
                       />
                     </div>
                     <div className="mb-2">
-                      <a href="#_" className="prim-btn cmsbtnSec mx-3">
+                      <Link
+                        to={`/edit-service/${match.params.id}`}
+                        className="prim-btn cmsbtnSec mx-3"
+                      >
                         <i className="fas fa-pen pe-2" />
                         Edit
-                      </a>
+                      </Link>
                     </div>
                   </div>
                   <div className="primContentWrap mb-2 d-xl-flex">

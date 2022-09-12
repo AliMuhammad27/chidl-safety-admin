@@ -5,6 +5,8 @@ import {
   GET_SERVICES_ERROR,
   GET_SERVICE_DETAILS,
   GET_SERVICE_DETAILS_ERROR,
+  EDIT_SERVICE,
+  EDIT_SERVICE_ERROR,
 } from "./actionTypes";
 import api from "../../util/api";
 import Success from "components/modals/Modal.Success";
@@ -46,6 +48,27 @@ export const addService =
       console.log("Err", err);
       dispatch({
         type: ADD_SERVICE_ERROR,
+      });
+    }
+  };
+
+export const editService =
+  (formData, id, searchParam, status, from, to, page, perPage, history) =>
+  async (dispatch) => {
+    try {
+      const res = await api.post(`/service/editService/${id}`, formData);
+      console.log("Ressss", res.data);
+      console.log("Action is Running");
+      dispatch({
+        type: EDIT_SERVICE,
+        payload: res.data,
+      });
+      Success("Service Edited Successfully", "Added");
+      dispatch(getAllServices(searchParam, status, from, to, page, perPage));
+    } catch (err) {
+      console.log("Err", err);
+      dispatch({
+        type: EDIT_SERVICE_ERROR,
       });
     }
   };

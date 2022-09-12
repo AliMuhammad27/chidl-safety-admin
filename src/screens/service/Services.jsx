@@ -227,7 +227,7 @@ const Services = () => {
                                               </Link>
                                               <Link
                                                 className="dropdown-item"
-                                                to="/edit-service/:id"
+                                                to={`/edit-service/${item?._id}`}
                                               >
                                                 <i className="fas fa-edit" />
                                                 Edit

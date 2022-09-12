@@ -24,7 +24,7 @@ const SideBar = () => {
               </li>
               <li className="nav-item">
                 {" "}
-                <Link className="navbar-brand" to="/">
+                <Link className="navbar-brand" to="/dashboard">
                   {" "}
                   <img
                     className="brand-logo img-fluid"
@@ -233,7 +233,7 @@ const SideBar = () => {
             data-menu="menu-navigation"
           >
             <li className="nav-item">
-              <Link to="/dashboard">
+              <Link to="/dashboard" target="_self">
                 <i className="fa fa-home" />
                 <span className="menu-title" data-i18n>
                   Dashboard
@@ -328,7 +328,7 @@ const SideBar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/cms/index.php">
+              <Link to="/cms-logs">
                 <i className="fas fa-th-large" />
                 <span className="menu-title" data-i18n>
                   CMS

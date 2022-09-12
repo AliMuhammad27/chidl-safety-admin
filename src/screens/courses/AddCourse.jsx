@@ -194,6 +194,7 @@ const AddCourse = ({ history }) => {
                     <button
                       className="prim-btn cmsbtnPrim"
                       onClick={(e) => {
+                        e.preventDefault();
                         dispatch(addCourse(formData, history));
                       }}
                     >
