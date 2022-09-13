@@ -32,6 +32,13 @@ const subscriptionReducer = (state = initialState, action) => {
         isLoading: false,
       };
 
+    case GET_SUBSCRIPTION:
+      return {
+        ...state,
+        subscription: payload,
+        isLoading: false,
+      };
+
     case GET_SUBSCRIPTIONS:
       return {
         ...state,
@@ -40,6 +47,8 @@ const subscriptionReducer = (state = initialState, action) => {
       };
     case GET_SUBSCRIPTIONS_ERROR:
     case CREATE_SUBSCRIPTION_ERROR:
+    case EDIT_SUBSCRIPTION_ERROR:
+    case GET_SUBSCRIPTION_ERROR:
       return {
         ...state,
         services: null,

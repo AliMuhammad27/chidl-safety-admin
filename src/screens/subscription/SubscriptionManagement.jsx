@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
+import { closeModals } from "util/closeModal";
 import {
   getAllSubscriptions,
   addSubscription,
+  getSubscriptionDetails,
+  editSubscription,
+  toggleActiveStatus,
 } from "redux/action/subscription";
 import Toasty from "util/toast";
 import Pagination from "components/Pagination";
 
 const SubscriptionManagement = () => {
+  const [id, setid] = useState("");
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [searchString, setSearchString] = useState("");
@@ -21,6 +26,7 @@ const SubscriptionManagement = () => {
     numberOfCourses: "",
     numberOfServices: "",
     subscriptionduration: "",
+    status: "",
   });
   const {
     subscriptionname,
@@ -48,6 +54,16 @@ const SubscriptionManagement = () => {
     });
   };
 
+  const subscriptionInfo = useSelector(
+    (state) => state?.subscription?.subscription?.subscription
+  );
+  console.log("subscriptionInfo", subscriptionInfo);
+  useEffect(() => {
+    if (id) {
+      dispatch(getSubscriptionDetails(id));
+    }
+  }, [id]);
+  console.log("changing Form", form);
   return (
     <div>
       <div className="app-content content dashboard">
@@ -191,18 +207,39 @@ const SubscriptionManagement = () => {
                                         <td>$ {item?.subscriptionprice}</td>
                                         <td>
                                           <div className="maindropdown">
-                                            <button className="maindropbtn cGreen">
-                                              Active
+                                            <button
+                                              className={
+                                                item?.status
+                                                  ? "maindropbtn cGreen"
+                                                  : "maindropbtn text-danger"
+                                              }
+                                            >
+                                              {item?.status ? (
+                                                <>Active</>
+                                              ) : (
+                                                <>In-Active</>
+                                              )}
                                               <i className="fas fa-caret-down ps-2" />
                                             </button>
                                             <div className="customDropdown-content">
                                               <a
                                                 href="#"
                                                 type="button"
+                                                onClick={(e) => {
+                                                  setid(item?._id);
+                                                }}
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#inactivateThis"
+                                                data-bs-target={
+                                                  item?.status
+                                                    ? "#inactivateThis"
+                                                    : "#activateThis"
+                                                }
                                               >
-                                                In-Active
+                                                {item?.status ? (
+                                                  <>In-Active</>
+                                                ) : (
+                                                  <>Active</>
+                                                )}{" "}
                                               </a>
                                             </div>
                                           </div>
@@ -226,6 +263,9 @@ const SubscriptionManagement = () => {
                                                 data-bs-target="#subscriptionPackageDetails"
                                                 data-bs-toggle="modal"
                                                 type="button"
+                                                onClick={(e) => {
+                                                  setid(item?._id);
+                                                }}
                                               >
                                                 <i className="far fa-eye" />
                                                 View
@@ -233,16 +273,15 @@ const SubscriptionManagement = () => {
                                               <a
                                                 className="dropdown-item"
                                                 href="#"
+                                                data-bs-toggle="modal"
+                                                type="button"
+                                                data-bs-target="#edit_Subscription"
+                                                onClick={(e) => {
+                                                  setid(item?._id);
+                                                }}
                                               >
                                                 <i className="fas fa-edit" />
                                                 Edit
-                                              </a>
-                                              <a
-                                                className="dropdown-item"
-                                                href="#"
-                                              >
-                                                <i className="fas fa-trash" />
-                                                Delete
                                               </a>
                                             </div>
                                           </div>
@@ -344,7 +383,7 @@ const SubscriptionManagement = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/sure.png" alt="sure" />
+                <img src="images/sure.png" alt="sure" />
               </div>
               <div className="main-modal-msg">
                 <h4 className="section-heading fw-800 my-4">Inactivate</h4>
@@ -359,6 +398,20 @@ const SubscriptionManagement = () => {
                   data-bs-toggle="modal"
                   data-bs-target="#inactivateConfirmation"
                   data-bs-dismiss="modal"
+                  onClick={(e) => {
+                    dispatch(
+                      toggleActiveStatus(
+                        id,
+                        searchString,
+                        status,
+                        from,
+                        to,
+                        page,
+                        perPage
+                      )
+                    );
+                    e.preventDefault();
+                  }}
                 >
                   Yes
                 </button>
@@ -394,7 +447,7 @@ const SubscriptionManagement = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/check.png" alt="check" />
+                <img src="images/check.png" alt="check" />
               </div>
               <div className="main-modal-msg my-2">
                 <h4 className="section-heading fw-800 my-4">Inactivate</h4>
@@ -436,7 +489,7 @@ const SubscriptionManagement = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/sure.png" alt="sure" />
+                <img src="images/sure.png" alt="sure" />
               </div>
               <div className="main-modal-msg">
                 <h4 className="section-heading fw-800 my-4">Activate</h4>
@@ -451,6 +504,20 @@ const SubscriptionManagement = () => {
                   data-bs-toggle="modal"
                   data-bs-target="#activateConfirmation"
                   data-bs-dismiss="modal"
+                  onClick={(e) => {
+                    dispatch(
+                      toggleActiveStatus(
+                        id,
+                        searchString,
+                        status,
+                        from,
+                        to,
+                        page,
+                        perPage
+                      )
+                    );
+                    e.preventDefault();
+                  }}
                 >
                   Yes
                 </button>
@@ -486,7 +553,7 @@ const SubscriptionManagement = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/check.png" alt="check" />
+                <img src="images/check.png" alt="check" />
               </div>
               <div className="main-modal-msg my-2">
                 <h4 className="section-heading fw-800">Activate</h4>
@@ -537,38 +604,42 @@ const SubscriptionManagement = () => {
                       <label htmlFor className="mb-1">
                         Package Name
                       </label>
-                      <p>ASASDFD</p>
+                      <p>{subscriptionInfo?.subscriptionname}</p>
                     </div>
                     <div className="primContentWrap mb-2 d-md-flex text-start">
                       <label htmlFor className="mb-1">
                         No of Courses
                       </label>
-                      <p>12</p>
+                      <p>{subscriptionInfo?.numberOfCourses}</p>
                     </div>
                     <div className="primContentWrap mb-2 d-md-flex text-start">
                       <label htmlFor className="mb-1">
                         No of Services
                       </label>
-                      <p>12</p>
+                      <p>{subscriptionInfo?.numberOfServices}</p>
                     </div>
 
                     <div className="primContentWrap mb-2 d-md-flex text-start">
                       <label htmlFor className="mb-1">
                         Duration
                       </label>
-                      <p>30 Days</p>
+                      <p>{subscriptionInfo?.subscriptionduration} days</p>
                     </div>
                     <div className="primContentWrap mb-2 d-md-flex text-start">
                       <label htmlFor className="mb-1">
                         Amount
                       </label>
-                      <p>$123</p>
+                      <p>{subscriptionInfo?.subscriptionprice}</p>
                     </div>
                     <div className="primContentWrap mb-2 d-md-flex text-start">
                       <label htmlFor className="mb-1">
                         Status
                       </label>
-                      <p>Active</p>
+                      {subscriptionInfo?.status ? (
+                        <p>Active</p>
+                      ) : (
+                        <p>In-Active</p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -720,8 +791,8 @@ const SubscriptionManagement = () => {
                     Status<span className="text-danger">*</span>
                   </label>
                   <select className="modal-select">
-                    <option value="Active">Active</option>
-                    <option value="InActive">InActive</option>
+                    <option value="true">Active</option>
+                    <option value="false">InActive</option>
                   </select>
                 </div>
                 <div className="modal-footer">
@@ -789,11 +860,16 @@ const SubscriptionManagement = () => {
                     htmlFor="ser_name"
                     className="d-block primLable my-2 px-md-3 px-1"
                   >
-                    Service Name <span className="text-danger">*</span>
+                    Subscription Name <span className="text-danger">*</span>
                   </label>
                   <input
                     id="ser_name"
                     type="text"
+                    name="subscriptionname"
+                    value={subscriptionname}
+                    onChange={(e) => {
+                      handleStateChange(e);
+                    }}
                     placeholder="Service Name"
                     className="auth-input passInput mx-0"
                   />
@@ -808,7 +884,32 @@ const SubscriptionManagement = () => {
                   <input
                     id="courses"
                     type="number"
+                    name="numberOfCourses"
+                    value={numberOfCourses}
+                    onChange={(e) => {
+                      handleStateChange(e);
+                    }}
                     placeholder={12}
+                    className="auth-input passInput mx-0"
+                  />
+                </div>
+
+                <div className="inp-wrap sec-inp-wrap mb-3">
+                  <label
+                    htmlFor="courses"
+                    className="d-block primLable my-2 px-md-3 px-1"
+                  >
+                    No of Services<span className="text-danger">*</span>
+                  </label>
+                  <input
+                    id="courses"
+                    type="number"
+                    placeholder={12}
+                    name="numberOfServices"
+                    value={numberOfServices}
+                    onChange={(e) => {
+                      handleStateChange(e);
+                    }}
                     className="auth-input passInput mx-0"
                   />
                 </div>
@@ -822,6 +923,11 @@ const SubscriptionManagement = () => {
                   <input
                     id="courses"
                     type="number"
+                    name="subscriptionduration"
+                    value={subscriptionduration}
+                    onChange={(e) => {
+                      handleStateChange(e);
+                    }}
                     placeholder={30}
                     className="auth-input passInput mx-0"
                   />
@@ -839,6 +945,11 @@ const SubscriptionManagement = () => {
                       id="num"
                       type="number"
                       placeholder="Enter Amount"
+                      name="subscriptionprice"
+                      value={subscriptionprice}
+                      onChange={(e) => {
+                        handleStateChange(e);
+                      }}
                       className="auth-input passInput mx-0"
                     />
                   </div>
@@ -850,13 +961,35 @@ const SubscriptionManagement = () => {
                   >
                     Status<span className="text-danger">*</span>
                   </label>
-                  <select className="modal-select">
-                    <option value="Active">Active</option>
-                    <option value="InActive">InActive</option>
+                  <select
+                    className="modal-select"
+                    value={status}
+                    name="status"
+                    onChange={(e) => {
+                      handleStateChange(e);
+                    }}
+                  >
+                    <option value="true">Active</option>
+                    <option value="false">InActive</option>
                   </select>
                 </div>
                 <div className="modal-footer">
                   <button
+                    onClick={(e) => {
+                      dispatch(
+                        editSubscription(
+                          form,
+                          id,
+                          searchString,
+                          status,
+                          from,
+                          to,
+                          page,
+                          perPage
+                        )
+                      );
+                      closeModals();
+                    }}
                     type="button"
                     className="prim-btn cmsbtnPrim my-1"
                     data-bs-dismiss="modal"

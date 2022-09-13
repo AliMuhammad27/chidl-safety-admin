@@ -60,7 +60,7 @@ export const editSubscription =
         type: EDIT_SUBSCRIPTION,
         payload: res.data,
       });
-      Success(" Subscription Added Successfully", "Added");
+      Success(" Subscription Edited Successfully", "Edited");
       dispatch(
         getAllSubscriptions(searchString, status, from, to, page, perPage)
       );
@@ -81,7 +81,22 @@ export const getSubscriptionDetails = (id) => async (dispatch) => {
     });
   } catch (err) {
     dispatch({
-      type: GET_SUBSCRIPTIONS_ERROR,
+      type: GET_SUBSCRIPTION_ERROR,
     });
   }
 };
+
+export const toggleActiveStatus =
+  (id, searchString, status, from, to, page, perPage) => async (dispatch) => {
+    try {
+      const res = await api.get(`/subscription/toggleStatus/${id}`);
+      // Success(res?.data?.msg);
+      dispatch(
+        getAllSubscriptions(searchString, status, from, to, page, perPage)
+      );
+    } catch (err) {
+      dispatch({
+        type: GET_SUBSCRIPTION_ERROR,
+      });
+    }
+  };

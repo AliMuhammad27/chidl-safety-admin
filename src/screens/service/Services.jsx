@@ -12,6 +12,7 @@ const Services = () => {
   const [to, setTo] = useState("");
   const [sort, setsort] = useState();
   const [status, setStatus] = useState("");
+  const [id, setid] = useState("");
   const dispatch = useDispatch();
   useEffect(() => {
     console.log("Fetching Products");
@@ -176,25 +177,14 @@ const Services = () => {
                                                 href="#"
                                                 type="button"
                                                 onClick={(e) => {
-                                                  dispatch(
-                                                    toggleActiveStatus(
-                                                      item?._id,
-                                                      searchString,
-                                                      status,
-                                                      from,
-                                                      to,
-                                                      page,
-                                                      perPage
-                                                    )
-                                                  );
-                                                  e.preventDefault();
+                                                  setid(item?._id);
                                                 }}
-                                                //data-bs-toggle="modal"
-                                                // data-bs-target={
-                                                //   item?.status
-                                                //     ? "#inactivateThis"
-                                                //     : "#activateThis"
-                                                // }
+                                                data-bs-toggle="modal"
+                                                data-bs-target={
+                                                  item?.status
+                                                    ? "#inactivateThis"
+                                                    : "#activateThis"
+                                                }
                                               >
                                                 {item?.status ? (
                                                   <>In-Active</>
@@ -332,7 +322,7 @@ const Services = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/sure.png" alt="sure" />
+                <img src="images/sure.png" alt="sure" />
               </div>
               <div className="main-modal-msg">
                 <h4 className="section-heading fw-800 my-4">Inactivate</h4>
@@ -347,6 +337,20 @@ const Services = () => {
                   data-bs-toggle="modal"
                   data-bs-target="#inactivateConfirmation"
                   data-bs-dismiss="modal"
+                  onClick={(e) => {
+                    dispatch(
+                      toggleActiveStatus(
+                        id,
+                        searchString,
+                        status,
+                        from,
+                        to,
+                        page,
+                        perPage
+                      )
+                    );
+                    e.preventDefault();
+                  }}
                 >
                   Yes
                 </button>
@@ -382,7 +386,7 @@ const Services = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/check.png" alt="check" />
+                <img src="images/check.png" alt="check" />
               </div>
               <div className="main-modal-msg my-2">
                 <h4 className="section-heading fw-800 my-4">Inactivate</h4>
@@ -424,7 +428,7 @@ const Services = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/sure.png" alt="sure" />
+                <img src="images/sure.png" alt="sure" />
               </div>
               <div className="main-modal-msg">
                 <h4 className="section-heading fw-800 my-4">Activate</h4>
@@ -439,6 +443,20 @@ const Services = () => {
                   data-bs-toggle="modal"
                   data-bs-target="#activateConfirmation"
                   data-bs-dismiss="modal"
+                  onClick={(e) => {
+                    dispatch(
+                      toggleActiveStatus(
+                        id,
+                        searchString,
+                        status,
+                        from,
+                        to,
+                        page,
+                        perPage
+                      )
+                    );
+                    e.preventDefault();
+                  }}
                 >
                   Yes
                 </button>
@@ -474,7 +492,7 @@ const Services = () => {
             </div>
             <div className="modal-body pb-5">
               <div className="text-center">
-                <img src="../../images/check.png" alt="check" />
+                <img src="images/check.png" alt="check" />
               </div>
               <div className="main-modal-msg my-2">
                 <h4 className="section-heading fw-800">Activate</h4>
